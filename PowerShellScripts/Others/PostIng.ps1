@@ -3,7 +3,7 @@ Param(
 )
 
 $PostBody = @{
-    Content     = '[¸ãÊÂ] ' + $Content + '¡£'
+    Content    = $Content
     publicFlag = 1
 }
 $PostParameters = @{

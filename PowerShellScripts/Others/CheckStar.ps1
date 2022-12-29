@@ -1,5 +1,5 @@
 $PostParameters = @{
-    Uri             = "https://ing.cnblogs.com/ajax/ing/GetIngList?IngListType=my&PageIndex=1&PageSize=1&Tag=%E6%90%9E%E4%BA%8B&_=1672192314675"
+    Uri             = "https://ing.cnblogs.com/ajax/ing/GetIngList?IngListType=my&PageIndex=1&PageSize=1&Tag=&_=1672192314675"
     Method          = 'GET'
     Headers         = @{
         "accept"       = "text/plain, */*; q=0.01"

@@ -9,7 +9,7 @@ $SuccessCount = 0
 while ( $SuccessCount -lt $Count) {
     $NowCount++
     Write-Host ("第"+ $NowCount +"次")
-    $PostContent = "神器在手，星星我有"
+    $PostContent = "[搞事] 神器在手，星星我有。"
     $PostResult = ./PostIng.ps1 -Content $PostContent
     if ($PostResult -eq $true) {
         if ($SkipDel -eq $false) {
