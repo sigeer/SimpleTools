@@ -1,6 +1,6 @@
 # 博客园闪存刷星用
 
-需要配置Cookie
+需要在`刷星.ps1`同级目录下配置`Cookie`文件，内容为最新Cookie
 
 ```PowerShell
 # 发送闪存
