@@ -9,7 +9,7 @@ $SuccessCount = 0
 while ( $SuccessCount -lt $Count) {
     $NowCount++
     Write-Host ("第"+ $NowCount +"次")
-    $PostContent = "[搞事] 神器在手，星星我有。"
+    $PostContent = "[搞事] 此处有星，禁止吐痰。"
     $PostResult = ./PostIng.ps1 -Content $PostContent
     if ($PostResult -eq $true) {
         if ($SkipDel -eq $false) {
@@ -22,5 +22,5 @@ while ( $SuccessCount -lt $Count) {
         }
     }
     Write-Host "等待5分钟..."
-    Start-Sleep -Seconds 310
+    Start-Sleep -Seconds 305
 }
