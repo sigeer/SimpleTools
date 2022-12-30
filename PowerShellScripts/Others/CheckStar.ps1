@@ -22,11 +22,11 @@ if ($Response.StatusCode -eq 200) {
     $RegStr = '<bdo><span class="ing_body" id="ing_body_'+$NowId+'">(((?!(img)).|\n)*)</bdo>(((?!\>).|\n)*)\<img'
     $IsMatched = $Response.Content -match $RegStr
     if ($IsMatched -eq $true) {
-        Write-Host "~~~ÓÐÐÇÐÇ" -ForegroundColor Green
+        Write-Host $(Get-Date)"~~~ÓÐÐÇÐÇ" -ForegroundColor Green
         Write-Output 0
     }
     else {
-        Write-Warning "Ã»ÐÇÐÇ"
+        Write-Host $(Get-Date)"---Ã»ÐÇÐÇ" -ForegroundColor Red
         Write-Output $NowId
     }
 } else {
