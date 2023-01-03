@@ -1,10 +1,11 @@
 ﻿Param(
-    [string]$Content
+    [string]$Content,
+    [bool]$IsPrivate
 )
 
 $PostBody = @{
     Content    = $Content
-    publicFlag = 1
+    publicFlag = $(if($IsPrivate){0}else{1})
 }
 $PostParameters = @{
     Uri             = "https://ing.cnblogs.com/ajax/ing/Publish"

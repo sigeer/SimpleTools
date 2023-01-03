@@ -26,7 +26,12 @@ while ($true) {
     if ($SuccessCount -lt $Count) {
         $NowCount++
         Write-Host ("No."+ $NowCount)
-        $PostResult = ./PostIng.ps1 -Content $Content
+        if (((Get-Date).Hour -lt 8) -and ((Get-Date).Hour -gt 18)) {
+            $IsPrivate = $true
+        } else {
+            $IsPrivate = $false
+        }
+        $PostResult = ./PostIng.ps1 -Content $Content -IsPrivate $IsPrivate
         if ($PostResult -eq $true) {
             if ($SkipDel -eq $false) {
                 $Id = ./CheckStar.ps1
