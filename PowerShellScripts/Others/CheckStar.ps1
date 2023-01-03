@@ -32,4 +32,6 @@ if ($Response.StatusCode -eq 200) {
 } else {
     Write-Host $Response.StatusCode
 }
-
+else {
+    Write-Output -1
+}

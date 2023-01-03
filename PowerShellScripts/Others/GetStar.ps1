@@ -30,12 +30,18 @@ while ( $SuccessCount -lt $Count) {
     if ($PostResult -eq $true) {
         if ($SkipDel -eq $false) {
             $Id = ./CheckStar.ps1
-            if ($Id -ne 0) {
-                ./DelIng.ps1 -Id $Id
-            } else {
+            if ($Id -eq -1){
+                Write-Error '请求失败，可能是Cookie过期或者被ban'
+                break
+            } else if ($Id -eq 0) {
                 $SuccessCount++ 
+            } else {
+                ./DelIng.ps1 -Id $Id
             }
         }
+    } else {
+        Write-Error '请求失败，可能是Cookie过期或者被ban'
+        break
     }
     Write-Host "Waiting for 5 mins..."
     Start-Sleep -Seconds 305
