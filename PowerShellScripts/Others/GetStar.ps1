@@ -1,11 +1,13 @@
 ﻿param (
     [int]$Count = 10,
-    [string]$Content = "[搞事] 星来",
+    [string]$Content = $null,
     [bool]$SkipDel = $false
 )
 if ($Content -eq $null -or $Content -eq "") {
     if ((Test-Path env:Content) -eq $true) {
         $Content = (Get-Item env:Content).Value
+    } else {
+        $Content = "[搞事] 星来"
     }
 }
 if ($Count -eq $null -or $Count -eq 0) {
