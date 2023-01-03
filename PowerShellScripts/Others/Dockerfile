@@ -1,6 +1,7 @@
-from centos/powershell
+from mcr.microsoft.com/powershell:preview
 
 COPY . .
-ENTRYPOINT ["powershell", "./GetStar.ps1"]
+RUN chmod 777 "./GetStar.ps1"
+ENTRYPOINT "./GetStar.ps1"
 
 #docker -t get-star -f Dockerfile .
