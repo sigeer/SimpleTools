@@ -4,14 +4,14 @@
     [bool]$SkipDel
 )
 if ($Content -eq $null -or $Content -eq "") {
-    if (Test-Path env:Content -eq $true) {
+    if ((Test-Path env:Content) -eq $true) {
         $Content = (Get-Item env:Content).Value
     } else {
         $Content = "[搞事] 星来"
     }
 }
 if ($Count -eq $null -or $Count -eq 0) {
-    if (Test-Path env:Count -eq $true) {
+    if ((Test-Path env:Count) -eq $true) {
         $Count = (Get-Item env:Count).Value
     } else {
         $Count = 10
