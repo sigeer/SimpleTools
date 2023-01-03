@@ -19,11 +19,11 @@ Write-Host "=======Begin======="
 $NowCount = 0
 $SuccessCount = 0
 while ($true) {
+    if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 13)) {
+        $NowCount = 0
+        $SuccessCount = 0
+    }
     if ($SuccessCount -lt $Count) {
-        if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 13)) {
-            $NowCount = 0
-            $SuccessCount = 0
-        }
         $NowCount++
         Write-Host ("No."+ $NowCount)
         $PostResult = ./PostIng.ps1 -Content $Content
