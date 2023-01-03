@@ -33,7 +33,7 @@ while ( $SuccessCount -lt $Count) {
             if ($Id -eq -1){
                 Write-Error '请求失败，可能是Cookie过期或者被ban'
                 break
-            } else if ($Id -eq 0) {
+            } elseif ($Id -eq 0) {
                 $SuccessCount++ 
             } else {
                 ./DelIng.ps1 -Id $Id
