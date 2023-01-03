@@ -1,4 +1,4 @@
-Param(
+﻿Param(
     [string]$ProjectDir,
     [String]$GitWorker,
     [String]$NugetServerPath,

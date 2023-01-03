@@ -1,4 +1,4 @@
-Param(
+锘縋aram(
     [string]$ProjectDir,
     [String]$GitWorker,
     [String]$NugetServerPath
@@ -24,10 +24,10 @@ bash $GitWorker
 dotnet build
 
 dotnet pack
-#找到目录下生成的所有包
+#锟揭碉拷目录锟斤拷锟斤拷锟缴碉拷锟斤拷锟叫帮拷
 $PackResult = Get-ChildItem '*.nupkg' -Recurse | Sort-Object -Property LastWriteTime -Descending
 if ($PackResult.Length -gt 0) {
-    #找到最新的包
+    #锟揭碉拷锟斤拷锟铰的帮拷
     $PackageFileObj = $PackResult[0]
 
     if (($NugetServerPath -eq $null) -or ($NugetServerPath -eq '')) {

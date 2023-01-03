@@ -1,4 +1,4 @@
-$PostParameters = @{
+ï»¿$PostParameters = @{
     Uri             = "https://ing.cnblogs.com/ajax/ing/GetIngList?IngListType=my&PageIndex=1&PageSize=1&Tag=&_=1672192314675"
     Method          = 'GET'
     Headers         = @{
@@ -22,11 +22,11 @@ if ($Response.StatusCode -eq 200) {
     $RegStr = '<bdo><span class="ing_body" id="ing_body_'+$NowId+'">(((?!(img)).|\n)*)</bdo>(((?!\>).|\n)*)\<img'
     $IsMatched = $Response.Content -match $RegStr
     if ($IsMatched -eq $true) {
-        Write-Host $(Get-Date)"~~~ÓÐÐÇÐÇ" -ForegroundColor Green
+        Write-Host $(Get-Date)"~~~æœ‰æ˜Ÿæ˜Ÿ" -ForegroundColor Green
         Write-Output 0
     }
     else {
-        Write-Host $(Get-Date)"---Ã»ÐÇÐÇ" -ForegroundColor Red
+        Write-Host $(Get-Date)"---æ²¡æ˜Ÿæ˜Ÿ" -ForegroundColor Red
         Write-Output $NowId
     }
 } else {
