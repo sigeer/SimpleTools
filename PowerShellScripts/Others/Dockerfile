@@ -1,6 +1,7 @@
 from mcr.microsoft.com/powershell:preview
 
-COPY . .
+COPY . ./app
+WORKDIR /app
 RUN chmod 777 "./GetStar.ps1"
 ENTRYPOINT "./GetStar.ps1"
 
