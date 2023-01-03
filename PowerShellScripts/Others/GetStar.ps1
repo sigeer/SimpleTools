@@ -1,6 +1,6 @@
 ﻿param (
     [int]$Count,
-    [string] $Content,
+    [string]$Content,
     [bool]$SkipDel
 )
 if ($Content -eq $null -or $Content -eq "") {
@@ -20,17 +20,17 @@ if ($Count -eq $null -or $Count -eq 0) {
 Write-Host "=======Begin======="
 $NowCount = 0
 $SuccessCount = 0
-while ( $SuccessCount -lt $Count) {
+while ($SuccessCount -lt $Count) {
     $NowCount++
     Write-Host ("第"+ $NowCount +"次")
-    if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 12 )) {
+    if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 12)) {
         $NowCount = 0
     }
     $PostResult = ./PostIng.ps1 -Content $Content
     if ($PostResult -eq $true) {
         if ($SkipDel -eq $false) {
             $Id = ./CheckStar.ps1
-            if ($Id -eq -1){
+            if ($Id -eq -1) {
                 Write-Error '请求失败，可能是Cookie过期或者被ban'
                 break
             } elseif ($Id -eq 0) {
