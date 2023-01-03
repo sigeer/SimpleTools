@@ -9,6 +9,7 @@ PostIng.ps1 -Content String
 DelIng.ps1 -Id Number
 # 判断有无星星
 CheckStar.ps1 [Result: 0 = ok, -ne 0 = fail]
-./刷星.ps1 -Count （刷多少颗星） -SkipDel （true => 没有星的闪存将不会被删除， 默认false）
-./刷星.ps1 -Count 10
+
+./GetStar.ps1 -Content（文本） -Count （刷多少颗星，默认10） -SkipDel （true => 没有星的闪存将不会被删除， 默认false）
+./GetStar.ps1
 ```
