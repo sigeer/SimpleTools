@@ -18,28 +18,31 @@ if ($Count -eq $null -or $Count -eq 0) {
 Write-Host "=======Begin======="
 $NowCount = 0
 $SuccessCount = 0
-while ($SuccessCount -lt $Count) {
-    $NowCount++
-    Write-Host ("No."+ $NowCount)
-    if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 12)) {
-        $NowCount = 0
-    }
-    $PostResult = ./PostIng.ps1 -Content $Content
-    if ($PostResult -eq $true) {
-        if ($SkipDel -eq $false) {
-            $Id = ./CheckStar.ps1
-            if ($Id -eq -1) {
-                Write-Error '请求失败，可能是Cookie过期或者被ban -1'
-                break
-            } elseif ($Id -eq 0) {
-                $SuccessCount++ 
-            } else {
-                ./DelIng.ps1 -Id $Id
-            }
+while ($true) {
+    if ($SuccessCount -lt $Count) {
+        if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 13)) {
+            $NowCount = 0
+            $SuccessCount = 0
         }
-    } else {
-        Write-Error '请求失败，可能是Cookie过期或者被ban -2'
-        break
+        $NowCount++
+        Write-Host ("No."+ $NowCount)
+        $PostResult = ./PostIng.ps1 -Content $Content
+        if ($PostResult -eq $true) {
+            if ($SkipDel -eq $false) {
+                $Id = ./CheckStar.ps1
+                if ($Id -eq -1) {
+                    Write-Error '请求失败，可能是Cookie过期或者被ban -1'
+                    break
+                } elseif ($Id -eq 0) {
+                    $SuccessCount++ 
+                } else {
+                    ./DelIng.ps1 -Id $Id
+                }
+            }
+        } else {
+            Write-Error '请求失败，可能是Cookie过期或者被ban -2'
+            break
+        }
     }
     Write-Host "Waiting for 5 mins..."
     Start-Sleep -Seconds 305
