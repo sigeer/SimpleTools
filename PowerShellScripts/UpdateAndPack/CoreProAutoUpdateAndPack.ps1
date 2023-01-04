@@ -24,10 +24,10 @@ bash $GitWorker
 dotnet build
 
 dotnet pack
-#�ҵ�Ŀ¼�����ɵ����а�
+#找到目录下生成的所有包
 $PackResult = Get-ChildItem '*.nupkg' -Recurse | Sort-Object -Property LastWriteTime -Descending
 if ($PackResult.Length -gt 0) {
-    #�ҵ����µİ�
+    #找到最新的包
     $PackageFileObj = $PackResult[0]
 
     if (($NugetServerPath -eq $null) -or ($NugetServerPath -eq '')) {
