@@ -7,7 +7,7 @@ if ($Content -eq $null -or $Content -eq "") {
     if ((Test-Path env:Content) -eq $true) {
         $Content = (Get-Item env:Content).Value
     } else {
-        $Content = "[搞事] 星来"
+        $Content = "[搞事] 当前第[NowCount]次，出现[SuccessCount]次，出现率[Rate]"
     }
 }
 if ($Count -eq $null -or $Count -eq 0) {
@@ -25,8 +25,18 @@ while ($true) {
     }
     if ($SuccessCount -lt $Count) {
         $NowCount++
+        $Rate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
         Write-Host ("No."+ $NowCount)
-        $PostResult = ./PostIng.ps1 -Content $Content
+        if (((Get-Date).Hour -lt 8) -and ((Get-Date).Hour -gt 18)) {
+            $IsPrivate = $true
+        } else {
+            $IsPrivate = $false
+        }
+        $Content = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
+        $Content = $Content -replace '\[NowCount\]', $NowCount
+        $Content = $Content -replace '\[Rate\]', $Rate
+
+        $PostResult = ./PostIng.ps1 -Content $Content -IsPrivate $IsPrivate
         if ($PostResult -eq $true) {
             if ($SkipDel -eq $false) {
                 $Id = ./CheckStar.ps1
@@ -35,6 +45,7 @@ while ($true) {
                     break
                 } elseif ($Id -eq 0) {
                     $SuccessCount++ 
+                    Write-Host "当前第${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
                 } else {
                     ./DelIng.ps1 -Id $Id
                 }
