@@ -32,11 +32,11 @@ while ($true) {
         } else {
             $IsPrivate = $false
         }
-        $Content = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
-        $Content = $Content -replace '\[NowCount\]', $NowCount
-        $Content = $Content -replace '\[Rate\]', $Rate
+        $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
+        $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
+        $PostContent = $PostContent -replace '\[Rate\]', $Rate
 
-        $PostResult = ./PostIng.ps1 -Content $Content -IsPrivate $IsPrivate
+        $PostResult = ./PostIng.ps1 -Content $PostContent -IsPrivate $IsPrivate
         if ($PostResult -eq $true) {
             if ($SkipDel -eq $false) {
                 $Id = ./CheckStar.ps1
