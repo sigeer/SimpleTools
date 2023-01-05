@@ -41,8 +41,8 @@ while ($true) {
         $PostContent = $PostContent -replace '\[Rate\]', $Rate
 
         $PostResult = ./PostIng.ps1 -Content $PostContent -IsPrivate $($IsPrivate -eq "true")
-        if ($PostResult -eq $true) {
-            if ($SkipDel -eq $false) {
+        if ($PostResult) {
+            if (!$SkipDel) {
                 $Id = ./CheckStar.ps1
                 if ($Id -eq -1) {
                     Write-Error '请求失败，可能是Cookie过期或者被ban -1'
