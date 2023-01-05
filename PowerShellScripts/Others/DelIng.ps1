@@ -25,7 +25,7 @@ $AuthCookie = New-Object System.Net.Cookie(".Cnblogs.AspNetCore.Cookies", $Cooki
 $WebSession.Cookies.Add($AuthCookie)
 $Response = Invoke-WebRequest @PostParameters -WebSession $WebSession
 if ($Response.StatusCode -eq 200) {
-    Write-Host ($(Get-Date).ToString() + ": Id=" + $Id + " " + $Response.Content)
+    Write-Host ($(Get-Date).ToString() + " Id=" + $Id + " " + $Response.Content)
 }
 else {
     Write-Host $Response.StatusCode
