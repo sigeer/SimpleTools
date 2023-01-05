@@ -19,7 +19,7 @@ $Response = Invoke-WebRequest @PostParameters -WebSession $WebSession
 if ($Response.StatusCode -eq 200) {
     $FirstMath = $Response.Content -match '<span class="ing_body" id="ing_body_(\d+)">'
     $NowId = $Matches[1]
-    $RegStr = '<bdo><span class="ing_body" id="ing_body_'+$NowId+'">(((?!(img)).|\n)*)</bdo>(((?!\>).|\n)*)\<img'
+    $RegStr = '<bdo><span class="ing_body" id="ing_body_'+$NowId+'">(((?!(img)).|\n)*)</bdo>(((?!\>).|\n)*)\<img alt="\[((?!\]).|\n)*星\]"'
     $IsMatched = $Response.Content -match $RegStr
     if ($IsMatched -eq $true) {
         Write-Host $(Get-Date)"~~~有星星" -ForegroundColor Green
