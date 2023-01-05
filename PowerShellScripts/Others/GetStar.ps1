@@ -1,7 +1,8 @@
 ﻿param (
     [int]$Count = 10,
     [string]$Content = $null,
-    [bool]$SkipDel = $false
+    [bool]$SkipDel = $false,
+    [string]$IsPrivate = $null
 )
 if ($Content -eq $null -or $Content -eq "") {
     if ((Test-Path env:Content) -eq $true) {
@@ -13,6 +14,13 @@ if ($Content -eq $null -or $Content -eq "") {
 if ($Count -eq $null -or $Count -eq 0) {
     if ((Test-Path env:Count) -eq $true) {
         $Count = (Get-Item env:Count).Value
+    }
+}
+if ($IsPrivate -eq $null -or $IsPrivate -eq "") {
+    if ((Test-Path env:IsPrivate) -eq $true) {
+        $IsPrivate = (Get-Item env:IsPrivate).Value
+    } else {
+        $IsPrivate = "true"
     }
 }
 Write-Host "=======Begin======="
@@ -27,16 +35,12 @@ while ($true) {
         $NowCount++
         $Rate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
         Write-Host ("No."+ $NowCount)
-        if (((Get-Date).Hour -lt 8) -and ((Get-Date).Hour -gt 18)) {
-            $IsPrivate = $true
-        } else {
-            $IsPrivate = $false
-        }
+
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $Rate
 
-        $PostResult = ./PostIng.ps1 -Content $PostContent -IsPrivate $IsPrivate
+        $PostResult = ./PostIng.ps1 -Content $PostContent -IsPrivate $($IsPrivate -eq "true")
         if ($PostResult -eq $true) {
             if ($SkipDel -eq $false) {
                 $Id = ./CheckStar.ps1
