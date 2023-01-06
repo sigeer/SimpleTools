@@ -1,5 +1,5 @@
 ﻿param (
-    [int]$Count = 10,
+    [int]$Count = 0,
     [string]$Content = $null,
     [bool]$SkipDel = $false,
     [string]$IsPrivate = $null
@@ -12,7 +12,9 @@ if ([string]::IsNullOrEmpty($Content)) {
 }
 if ($Count -eq $null -or $Count -eq 0) {
     if (Test-Path env:Count) {
-        $Count = (Get-Item env:Count).Value
+        $Count = (Get-Item env:Count).Value -as [int]
+    } else {
+        $Count = 0
     }
 }
 if ([string]::IsNullOrEmpty($IsPrivate)) {
@@ -44,6 +46,7 @@ function Get-PostContent {
 
 
 Write-Host "=======Begin======="
+Write-Host "[Target]: $Count"
 $NowCount = $InitNowCount
 $SuccessCount = $InitSuccessCount
 while ($true) {
@@ -83,9 +86,9 @@ while ($true) {
             Write-Error '请求失败，可能是Cookie过期或者被ban -2'
             break
         }
+        $Rate = "$([Math]::Round($SuccessCount/$NowCount, 4) * 100)%"
+        Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     }
-    $Rate = "$([Math]::Round($SuccessCount/$NowCount, 4) * 100)%"
-    Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     Write-Host "Waiting for 5 mins..."
     Start-Sleep -Seconds 301
 }
