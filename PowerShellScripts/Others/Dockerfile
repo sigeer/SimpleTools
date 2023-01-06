@@ -1,8 +1,6 @@
-from mcr.microsoft.com/powershell:preview
+from demisto/powershell:7.2.1.34341
 
 COPY . ./app
-COPY /etc/localtime /etc/localtime
-COPY /etc/timezone /etc/timezone
 
 WORKDIR /app
 ENV TERM=xterm-256color
@@ -13,7 +11,7 @@ RUN chmod 777 "./GetStar.ps1"
 RUN chmod 777 "./DelIng.ps1"
 RUN chmod 777 "./PostIng.ps1"
 RUN chmod 777 "./CheckStar.ps1"
-ENTRYPOINT ["pwsh-preview", "./GetStar.ps1"]
+ENTRYPOINT ["pwsh", "./GetStar.ps1"]
 
 #docker -t get-star -f Dockerfile .
 #docker run -d get-star
