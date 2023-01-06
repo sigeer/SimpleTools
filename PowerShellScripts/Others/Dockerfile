@@ -13,3 +13,4 @@ RUN chmod 777 "./CheckStar.ps1"
 ENTRYPOINT ["pwsh-preview", "./GetStar.ps1"]
 
 #docker -t get-star -f Dockerfile .
+#docker run -d get-star
