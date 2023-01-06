@@ -1,8 +1,11 @@
 from mcr.microsoft.com/powershell:preview
 
 COPY . ./app
+COPY /etc/localtime /etc/localtime
+COPY /etc/timezone /etc/timezone
+
 WORKDIR /app
-ENV TERM xterm-256color
+ENV TERM=xterm-256color
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
