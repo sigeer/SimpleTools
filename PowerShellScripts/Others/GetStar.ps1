@@ -4,28 +4,34 @@
     [bool]$SkipDel = $false,
     [string]$IsPrivate = $null
 )
-if ($Content -eq $null -or $Content -eq "") {
-    if ((Test-Path env:Content) -eq $true) {
+if ([string]::IsNullOrEmpty($Content)) {
+    if (Test-Path env:Content) {
         $Content = (Get-Item env:Content).Value
-    } else {
-        $Content = "[搞事] 当前第[NowCount]次，出现[SuccessCount]次，出现率[Rate]"
     }
 }
 if ($Count -eq $null -or $Count -eq 0) {
-    if ((Test-Path env:Count) -eq $true) {
+    if (Test-Path env:Count) {
         $Count = (Get-Item env:Count).Value
     }
 }
-if ($IsPrivate -eq $null -or $IsPrivate -eq "") {
-    if ((Test-Path env:IsPrivate) -eq $true) {
+if ([string]::IsNullOrEmpty($IsPrivate)) {
+    if (Test-Path env:IsPrivate) {
         $IsPrivate = (Get-Item env:IsPrivate).Value
     } else {
         $IsPrivate = "false"
     }
 }
+$InitNowCount = 0
+if (Test-Path env:InitNowCount) {
+    $InitNowCount = (Get-Item env:InitNowCount).Value
+}
+$InitSuccessCount = 0
+if (Test-Path env:InitSuccessCount) {
+    $InitNowCount = (Get-Item env:InitSuccessCount).Value
+}
 Write-Host "=======Begin======="
-$NowCount = 0
-$SuccessCount = 0
+$NowCount = $InitNowCount
+$SuccessCount = $InitSuccessCount
 while ($true) {
     if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 13)) {
         $NowCount = 0
@@ -40,6 +46,7 @@ while ($true) {
         $Rate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
         Write-Host ("==========>No."+ $NowCount)
 
+        $Content = Get-PostContent
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $Rate
@@ -53,7 +60,6 @@ while ($true) {
                     break
                 } elseif ($Id -eq 0) {
                     $SuccessCount++ 
-                    Write-Host "当前第${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
                 } else {
                     ./DelIng.ps1 -Id $Id
                 }
@@ -63,6 +69,17 @@ while ($true) {
             break
         }
     }
+    Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     Write-Host "Waiting for 5 mins..."
     Start-Sleep -Seconds 301
+}
+
+function Get-PostContent {
+    if ([string]::IsNullOrEmpty($Content) -and (Test-Path Wording.txt)) {
+        $Content = $($(Get-Content ./Wording.txt) -split ",") | Get-Random
+    }
+    if ([string]::IsNullOrEmpty($Content)) {
+        $Content = "[搞事]"
+    }
+    return $Content.TrimStart()
 }
