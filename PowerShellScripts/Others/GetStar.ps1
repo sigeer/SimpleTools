@@ -43,13 +43,14 @@ while ($true) {
     }
     if ($SuccessCount -lt $Count) {
         $NowCount++
-        $Rate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
-        Write-Host ("==========>No."+ $NowCount)
+        $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
+        Write-Host ("==========>No."+ $NowCount)
+        
         $Content = Get-PostContent
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
-        $PostContent = $PostContent -replace '\[Rate\]', $Rate
+        $PostContent = $PostContent -replace '\[Rate\]', $IfRate
 
         $PostResult = ./PostIng.ps1 -Content $PostContent -IsPrivate $($IsPrivate -eq "true")
         if ($PostResult) {
@@ -69,6 +70,7 @@ while ($true) {
             break
         }
     }
+    $Rate = "$([Math]::Round($SuccessCount/$NowCount, 4) * 100)%"
     Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     Write-Host "Waiting for 5 mins..."
     Start-Sleep -Seconds 301
