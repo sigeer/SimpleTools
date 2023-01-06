@@ -23,11 +23,11 @@ if ([string]::IsNullOrEmpty($IsPrivate)) {
 }
 $InitNowCount = 0
 if (Test-Path env:InitNowCount) {
-    $InitNowCount = (Get-Item env:InitNowCount).Value
+    $InitNowCount = (Get-Item env:InitNowCount).Value -as [int]
 }
 $InitSuccessCount = 0
 if (Test-Path env:InitSuccessCount) {
-    $InitNowCount = (Get-Item env:InitSuccessCount).Value
+    $InitNowCount = (Get-Item env:InitSuccessCount).Value -as [int]
 }
 Write-Host "=======Begin======="
 $NowCount = $InitNowCount
