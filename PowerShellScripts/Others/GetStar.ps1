@@ -20,7 +20,7 @@ if ($IsPrivate -eq $null -or $IsPrivate -eq "") {
     if ((Test-Path env:IsPrivate) -eq $true) {
         $IsPrivate = (Get-Item env:IsPrivate).Value
     } else {
-        $IsPrivate = "true"
+        $IsPrivate = "false"
     }
 }
 Write-Host "=======Begin======="
@@ -31,10 +31,14 @@ while ($true) {
         $NowCount = 0
         $SuccessCount = 0
     }
+    if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 7)) {
+        Write-Host "周末降低频率。"
+        Start-Sleep -Seconds 7200
+    }
     if ($SuccessCount -lt $Count) {
         $NowCount++
         $Rate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
-        Write-Host ("No."+ $NowCount)
+        Write-Host ("==========>No."+ $NowCount)
 
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
@@ -60,5 +64,5 @@ while ($true) {
         }
     }
     Write-Host "Waiting for 5 mins..."
-    Start-Sleep -Seconds 305
+    Start-Sleep -Seconds 301
 }
