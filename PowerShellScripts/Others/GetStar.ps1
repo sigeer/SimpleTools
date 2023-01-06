@@ -37,7 +37,7 @@ if (Test-Path env:InitNowCount) {
 }
 $InitSuccessCount = 0
 if (Test-Path env:InitSuccessCount) {
-    $InitNowCount = (Get-Item env:InitSuccessCount).Value -as [int]
+    $InitSuccessCount = (Get-Item env:InitSuccessCount).Value -as [int]
 }
 Write-Host "=======Begin======="
 $NowCount = $InitNowCount
