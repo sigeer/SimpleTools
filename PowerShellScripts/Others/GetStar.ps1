@@ -4,15 +4,6 @@
     [bool]$SkipDel = $false,
     [string]$IsPrivate = $null
 )
-function Get-PostContent {
-    if ([string]::IsNullOrEmpty($Content) -and (Test-Path Wording.txt)) {
-        $Content = $($(Get-Content ./Wording.txt) -split ",") | Get-Random
-    }
-    if ([string]::IsNullOrEmpty($Content)) {
-        $Content = "[搞事]"
-    }
-    return $Content.TrimStart()
-}
 
 if ([string]::IsNullOrEmpty($Content)) {
     if (Test-Path env:Content) {
@@ -39,6 +30,19 @@ $InitSuccessCount = 0
 if (Test-Path env:InitSuccessCount) {
     $InitSuccessCount = (Get-Item env:InitSuccessCount).Value -as [int]
 }
+
+$UseRandom = [string]::IsNullOrEmpty($Content)
+function Get-PostContent {
+    if ($UseRandom -and (Test-Path Wording.txt)) {
+        $Content = $($(Get-Content ./Wording.txt) -split ",") | Get-Random
+    }
+    if ([string]::IsNullOrEmpty($Content)) {
+        $Content = "[搞事]"
+    }
+    return $Content.TrimStart()
+}
+
+
 Write-Host "=======Begin======="
 $NowCount = $InitNowCount
 $SuccessCount = $InitSuccessCount
