@@ -1,4 +1,4 @@
-from demisto/powershell:7.2.1.34341
+from mcr.microsoft.com/powershell
 
 COPY . ./app
 
