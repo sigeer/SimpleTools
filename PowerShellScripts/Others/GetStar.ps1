@@ -4,6 +4,16 @@
     [bool]$SkipDel = $false,
     [string]$IsPrivate = $null
 )
+function Get-PostContent {
+    if ([string]::IsNullOrEmpty($Content) -and (Test-Path Wording.txt)) {
+        $Content = $($(Get-Content ./Wording.txt) -split ",") | Get-Random
+    }
+    if ([string]::IsNullOrEmpty($Content)) {
+        $Content = "[搞事]"
+    }
+    return $Content.TrimStart()
+}
+
 if ([string]::IsNullOrEmpty($Content)) {
     if (Test-Path env:Content) {
         $Content = (Get-Item env:Content).Value
@@ -27,7 +37,7 @@ if (Test-Path env:InitNowCount) {
 }
 $InitSuccessCount = 0
 if (Test-Path env:InitSuccessCount) {
-    $InitNowCount = (Get-Item env:InitSuccessCount).Value -as [int]
+    $InitSuccessCount = (Get-Item env:InitSuccessCount).Value -as [int]
 }
 Write-Host "=======Begin======="
 $NowCount = $InitNowCount
@@ -74,14 +84,4 @@ while ($true) {
     Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     Write-Host "Waiting for 5 mins..."
     Start-Sleep -Seconds 301
-}
-
-function Get-PostContent {
-    if ([string]::IsNullOrEmpty($Content) -and (Test-Path Wording.txt)) {
-        $Content = $($(Get-Content ./Wording.txt) -split ",") | Get-Random
-    }
-    if ([string]::IsNullOrEmpty($Content)) {
-        $Content = "[搞事]"
-    }
-    return $Content.TrimStart()
 }
