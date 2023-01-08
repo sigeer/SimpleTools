@@ -54,7 +54,7 @@ while ($true) {
         $NowCount = 0
         $SuccessCount = 0
     }
-    if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 7)) {
+    if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
         Write-Host "周末降低频率。"
         Start-Sleep -Seconds 7200
     }
