@@ -54,7 +54,7 @@ while ($true) {
         $NowCount = 0
         $SuccessCount = 0
     }
-    if (((Get-Date).Hour -lt 8) -and ((Get-Date).Hour -gt 18)) {
+    if (((Get-Date).Hour -le 6) -or ((Get-Date).Hour -gt 18)) {
         Write-Host "下班时间降低频率。"
         Start-Sleep -Seconds 7200
     }
@@ -72,6 +72,10 @@ while ($true) {
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
+
+        if (($SuccessCount + 1) -eq $Count) {
+            $PostContent = "[终结技] 最后再拿一颗"
+        }
 
         $PostResult = ./PostIng.ps1 -Content $PostContent -IsPrivate $($IsPrivate -eq "true")
         if ($PostResult) {
@@ -93,6 +97,6 @@ while ($true) {
         $Rate = "$([Math]::Round($SuccessCount/$NowCount, 4) * 100)%"
         Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     }
-    Write-Host "Waiting for 5 mins..."
-    Start-Sleep -Seconds 301
+    Write-Host "Waiting for 10 mins..."
+    Start-Sleep -Seconds 600
 }
