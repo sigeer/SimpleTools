@@ -99,6 +99,7 @@ while ($true) {
     }
     $WaitMins = Get-Random -Minimum 5 -Maximum 20
     $WaitSeconds = Get-Random -Minimum 5 -Maximum 20
-    Write-Host "Waiting for $Wait mins..."
-    Start-Sleep -Seconds (60 * $WaitMins + $WaitSeconds)
+    $TotalSeconds = (60 * $WaitMins + $WaitSeconds)
+    Write-Host "Waiting for ${TotalSeconds}s..."
+    Start-Sleep -Seconds $TotalSeconds
 }
