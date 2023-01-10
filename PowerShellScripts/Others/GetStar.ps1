@@ -97,7 +97,7 @@ while ($true) {
         $Rate = "$([Math]::Round($SuccessCount/$NowCount, 4) * 100)%"
         Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     }
-    $WaitMins = Get-Random -Minimum 5 -Maximum 20
+    $WaitMins = Get-Random -Minimum 5 -Maximum 10
     $WaitSeconds = Get-Random -Minimum 5 -Maximum 20
     $TotalSeconds = (60 * $WaitMins + $WaitSeconds)
     Write-Host "Waiting for ${TotalSeconds}s..."
