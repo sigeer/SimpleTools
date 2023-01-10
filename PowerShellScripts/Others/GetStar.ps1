@@ -36,7 +36,7 @@ if (Test-Path env:InitSuccessCount) {
 $UseRandom = [string]::IsNullOrEmpty($Content)
 function Get-PostContent {
     if ($UseRandom -and (Test-Path Wording.txt)) {
-        $Content = $($(Get-Content ./Wording.txt) -split ",") | Get-Random
+        $Content = $($(Get-Content ./Wording.txt) -split "\r\n") | Get-Random
     }
     if ([string]::IsNullOrEmpty($Content)) {
         $Content = "[搞事]"
