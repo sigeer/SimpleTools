@@ -36,7 +36,7 @@ if (Test-Path env:InitSuccessCount) {
 $UseRandom = [string]::IsNullOrEmpty($Content)
 function Get-PostContent {
     if ($UseRandom -and (Test-Path Wording.txt)) {
-        $Content = $($(Get-Content ./Wording.txt) -split ",") | Get-Random
+        $Content = $($(Get-Content ./Wording.txt) -split "\r\n") | Get-Random
     }
     if ([string]::IsNullOrEmpty($Content)) {
         $Content = "[搞事]"
@@ -99,6 +99,7 @@ while ($true) {
     }
     $WaitMins = Get-Random -Minimum 5 -Maximum 20
     $WaitSeconds = Get-Random -Minimum 5 -Maximum 20
-    Write-Host "Waiting for $Wait mins..."
-    Start-Sleep -Seconds (60 * $WaitMins + $WaitSeconds)
+    $TotalSeconds = (60 * $WaitMins + $WaitSeconds)
+    Write-Host "Waiting for ${TotalSeconds}s..."
+    Start-Sleep -Seconds $TotalSeconds
 }
