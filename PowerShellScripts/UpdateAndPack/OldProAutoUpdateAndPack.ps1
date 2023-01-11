@@ -5,11 +5,11 @@
     [String]$CompilerDir
 )
 
-if (($ProjectDir -eq $null) -or ($ProjectDir -eq '')){
+if ([string]::IsNullOrEmpty($ProjectDir)){
     $ProjectDir = (Get-Location).Path
 }
 
-if (($GitWorker -eq $null) -or ($GitWorker -eq '')) {
+if ([string]::IsNullOrEmpty($GitWorker)) {
     $GitWorker = (Get-ChildItem -Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) 'GitPull.sh').FullName
 }
 
@@ -25,9 +25,9 @@ bash $GitWorker
 
 
 if (($CompilerDir -eq $null) -or ($CompilerDir -eq '')) {
-    $CompilerDir + "msbuild" 
+    Invoke-Expression ($CompilerDir + "msbuild")
 } else {
-    "msbuild"
+    msbuild
 }
 
 nuget pack
@@ -37,10 +37,16 @@ if ($PackResult.Length -gt 0) {
     #找到最新的包
     $PackageFileObj = $PackResult[0]
 
-    if (($NugetServerPath -eq $null) -or ($NugetServerPath -eq '')) {
+    if ([string]::IsNullOrEmpty($NugetServerPath)) {
         Write-Warning "===>Nupkg has success generated on $PackageFileObj, but [NugetServerPath] is NullOrEmpty."
     } else {
-        Invoke-Expression "nuget push $PackageFileObj.FullName -Src $NugetServerPath -SkipDuplicate"
+        Write-Host "${NugetServerPath}\$($PackageFileObj.Name)"
+        if (Test-Path "${NugetServerPath}\$($PackageFileObj.Name)") {
+            Write-Warning "Package Exited"
+        } else {
+            Write-Host "nuget push ${PackageFileObj} -Src $NugetServerPath -SkipDuplicate"
+            Invoke-Expression "nuget push ${PackageFileObj} -Src $NugetServerPath -SkipDuplicate"
+        }
     }
 
     Remove-Item -Path $PackageFileObj
