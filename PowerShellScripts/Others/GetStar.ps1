@@ -56,7 +56,7 @@ while ($true) {
         $SuccessCount = 0
         $ToDay = (Get-Date).Day
     }
-    if (((Get-Date).Hour -le 6) -or ((Get-Date).Hour -gt 18)) {
+    if (((Get-Date).Hour -le 8) -or ((Get-Date).Hour -gt 18)) {
         Write-Host "下班时间降低频率。"
         Start-Sleep -Seconds 3600
         continue
