@@ -49,18 +49,22 @@ Write-Host "=======Begin======="
 Write-Host "[Target]: $Count"
 $NowCount = $InitNowCount
 $SuccessCount = $InitSuccessCount
+$ToDay = (Get-Date).Day
 while ($true) {
-    if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 13)) {
+    if ($ToDay -ne (Get-Date).Day) {
         $NowCount = 0
         $SuccessCount = 0
+        $ToDay = (Get-Date).Day
     }
     if (((Get-Date).Hour -le 6) -or ((Get-Date).Hour -gt 18)) {
         Write-Host "下班时间降低频率。"
-        Start-Sleep -Seconds 7200
+        Start-Sleep -Seconds 3600
+        continue
     }
     if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
         Write-Host "周末降低频率。"
-        Start-Sleep -Seconds 7200
+        Start-Sleep -Seconds 3600
+        continue
     }
     if ($SuccessCount -lt $Count) {
         $NowCount++
