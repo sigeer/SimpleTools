@@ -49,18 +49,22 @@ Write-Host "=======Begin======="
 Write-Host "[Target]: $Count"
 $NowCount = $InitNowCount
 $SuccessCount = $InitSuccessCount
+$ToDay = (Get-Date).Day
 while ($true) {
-    if (((Get-Date).Hour -eq 0) -and ($NowCount -gt 13)) {
+    if ($ToDay -ne (Get-Date).Day) {
         $NowCount = 0
         $SuccessCount = 0
+        $ToDay = (Get-Date).Day
     }
     if (((Get-Date).Hour -le 6) -or ((Get-Date).Hour -gt 18)) {
         Write-Host "下班时间降低频率。"
-        Start-Sleep -Seconds 7200
+        Start-Sleep -Seconds 3600
+        continue
     }
     if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
         Write-Host "周末降低频率。"
-        Start-Sleep -Seconds 7200
+        Start-Sleep -Seconds 3600
+        continue
     }
     if ($SuccessCount -lt $Count) {
         $NowCount++
@@ -97,7 +101,7 @@ while ($true) {
         $Rate = "$([Math]::Round($SuccessCount/$NowCount, 4) * 100)%"
         Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     }
-    $WaitMins = Get-Random -Minimum 5 -Maximum 20
+    $WaitMins = Get-Random -Minimum 5 -Maximum 10
     $WaitSeconds = Get-Random -Minimum 5 -Maximum 20
     $TotalSeconds = (60 * $WaitMins + $WaitSeconds)
     Write-Host "Waiting for ${TotalSeconds}s..."
