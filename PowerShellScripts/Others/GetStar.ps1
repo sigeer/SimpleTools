@@ -51,11 +51,6 @@ $NowCount = $InitNowCount
 $SuccessCount = $InitSuccessCount
 $ToDay = (Get-Date).Day
 while ($true) {
-    if ($ToDay -ne (Get-Date).Day) {
-        $NowCount = 0
-        $SuccessCount = 0
-        $ToDay = (Get-Date).Day
-    }
     if (((Get-Date).Hour -le 8) -or ((Get-Date).Hour -gt 18)) {
         Write-Host "下班时间降低频率。"
         Start-Sleep -Seconds 3600
@@ -66,6 +61,13 @@ while ($true) {
         Start-Sleep -Seconds 3600
         continue
     }
+    
+    if ($ToDay -ne (Get-Date).Day) {
+        $NowCount = 0
+        $SuccessCount = 0
+        $ToDay = (Get-Date).Day
+    }
+
     if ($SuccessCount -lt $Count) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
