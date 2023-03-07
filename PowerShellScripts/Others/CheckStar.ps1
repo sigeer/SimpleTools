@@ -1,5 +1,5 @@
 ﻿$PostParameters = @{
-    Uri             = "https://ing.cnblogs.com/ajax/ing/GetIngList?IngListType=my&PageIndex=1&PageSize=1&Tag=&_=1672192314675"
+    Uri             = "https://ing.cnblogs.com/ajax/ing/GetIngList?IngListType=my&PageIndex=1&PageSize=10&Tag=&_=$([System.DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds())"
     Method          = 'GET'
     Headers         = @{
         "accept"       = "text/plain, */*; q=0.01"
@@ -9,7 +9,6 @@
         "x-requested-with" = "XMLHttpRequest"
     }
     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
-
 }
 $WebSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
 $CookieStr = Get-Content ./Cookie
@@ -17,7 +16,7 @@ $AuthCookie = New-Object System.Net.Cookie(".Cnblogs.AspNetCore.Cookies", $Cooki
 $WebSession.Cookies.Add($AuthCookie)
 $Response = Invoke-WebRequest @PostParameters -WebSession $WebSession
 if ($Response.StatusCode -eq 200) {
-    $FirstMath = $Response.Content -match '<span class="ing_body" id="ing_body_(\d+)">'
+    $Response.Content -match '<span class="ing_body" id="ing_body_(\d+)">'
     $NowId = $Matches[1]
     #Write-Host $Response.Content
     $RegStr = '<div class="feed_body" id="feed_content_'+$NowId+'">(((?!删除).|\n)*)\<img(\s)*alt=((?!\]).|\n)*星\]'

@@ -2,7 +2,7 @@
     [int]$Count = 0,
     [string]$Content = $null,
     [bool]$SkipDel = $false,
-    [string]$IsPrivate = $null
+    [string]$Tag = $null
 )
 
 if ([string]::IsNullOrEmpty($Content)) {
@@ -17,13 +17,13 @@ if ($Count -eq $null -or $Count -eq 0) {
         $Count = 0
     }
 }
-if ([string]::IsNullOrEmpty($IsPrivate)) {
-    if (Test-Path env:IsPrivate) {
-        $IsPrivate = (Get-Item env:IsPrivate).Value
-    } else {
-        $IsPrivate = "false"
+
+if ([string]::IsNullOrEmpty($Tag)) {
+    if (Test-Path env:Tag) {
+        $Tag = (Get-Item env:Tag).Value
     }
 }
+
 $InitNowCount = 0
 if (Test-Path env:InitNowCount) {
     $InitNowCount = (Get-Item env:InitNowCount).Value -as [int]
@@ -38,8 +38,11 @@ function Get-PostContent {
     if ($UseRandom -and (Test-Path Wording.txt)) {
         $Content = $($(Get-Content ./Wording.txt) -split "\r\n") | Get-Random
     }
+    if (![string]::IsNullOrEmpty($Tag)) {
+        $Content = $Tag + " " + $Content.TrimStart()
+    }
     if ([string]::IsNullOrEmpty($Content)) {
-        $Content = "[搞事]"
+        $Content = "[标签]"
     }
     return $Content.TrimStart()
 }
@@ -83,7 +86,7 @@ while ($true) {
             $PostContent = "[终结技] 最后再拿一颗"
         }
 
-        $PostResult = ./PostIng.ps1 -Content $PostContent -IsPrivate $($IsPrivate -eq "true")
+        $PostResult = ./PostIng.ps1 -Content $PostContent
         if ($PostResult) {
             if (!$SkipDel) {
                 $Id = ./CheckStar.ps1

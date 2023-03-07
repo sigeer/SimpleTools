@@ -1,6 +1,6 @@
 ﻿Param(
     [string]$Content,
-    [bool]$IsPrivate
+    [bool]$IsPrivate = $false
 )
 
 $PostBody = @{
