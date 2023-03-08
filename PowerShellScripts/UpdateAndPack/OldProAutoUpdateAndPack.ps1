@@ -28,16 +28,16 @@ if ((Get-ChildItem '*.csproj').Length -eq 0) {
 Write-Host "Step2. Git Pull" -ForegroundColor Green
 bash $GitWorker
 
-Write-Host "Step3. build | Command: msbuild" -ForegroundColor Green
+$BuildCommand = "msbuild"
+Write-Host "Step3. Build | Command: $BuildCommand" -ForegroundColor Green
 if (![string]::IsNullOrEmpty($CompilerDir)) {
-    & $CompilerDir + "\msbuild"
-} else {
-    msbuild
+    $BuildCommand = Join-Path $CompilerDir "msbuild"
 }
+& $BuildCommand
 
-$NugetPackCommand = "nuget pack"
-Write-Host "Step4. nuget pack | Command: $NugetPackCommand" -ForegroundColor Green
-& $NugetPackCommand
+$PackCommand = "nuget pack"
+Write-Host "Step4. Pack | Command: $PackCommand" -ForegroundColor Green
+Invoke-Expression $PackCommand
 
 #找到目录下生成的所有包
 $PackResult = Get-ChildItem '*.nupkg' -Recurse | Sort-Object -Property LastWriteTime -Descending
@@ -53,8 +53,8 @@ if ($PackResult.Length -gt 0) {
             Write-Warning "Package Exited"
         } else {
             $PushCommand = "nuget push ${PackageFileObj} -Src $NugetServerPath -SkipDuplicate"
-            Write-Host "Step5. nuget push | Command: $PushCommand" -ForegroundColor Green
-            & $PushCommand
+            Write-Host "Step5. Push | Command: $PushCommand" -ForegroundColor Green
+            Invoke-Expression $PushCommand
         }
     }
 

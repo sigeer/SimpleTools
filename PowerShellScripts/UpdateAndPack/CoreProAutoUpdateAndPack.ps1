@@ -27,12 +27,13 @@ if ((Get-ChildItem '*.csproj').Length -eq 0) {
 Write-Host "Step2. Git Pull" -ForegroundColor Green
 bash $GitWorker
 
-Write-Host "Step3. build | Command: dotnet build" -ForegroundColor Green
-dotnet build
+$BuildCommand = "dotnet build"
+Write-Host "Step3. Build | Command: $BuildCommand" -ForegroundColor Green
+Invoke-Expression $BuildCommand
 
-$DotnetPackCommand = "dotnet pack"
-Write-Host "Step4. dotnet pack | Command: $DotnetPackCommand" -ForegroundColor Green
-& $DotnetPackCommand
+$PackCommand = "dotnet pack"
+Write-Host "Step4. Pack | Command: $PackCommand" -ForegroundColor Green
+Invoke-Expression $PackCommand
 
 #找到目录下生成的所有包
 $PackResult = Get-ChildItem '*.nupkg' -Recurse | Sort-Object -Property LastWriteTime -Descending
@@ -48,13 +49,13 @@ if ($PackResult.Length -gt 0) {
             Write-Warning "Package Exited"
         } else {
             $PushCommand = "dotnet nuget push ${PackageFileObj} -s $NugetServerPath --skip-duplicate"
-            Write-Host "Step5. nuget push | Command: $PushCommand" -ForegroundColor Green
-            & $PushCommand
+            Write-Host "Step5. Push | Command: $PushCommand" -ForegroundColor Green
+            Invoke-Expression $PushCommand
         }
     }
 
     Remove-Item -Path $PackageFileObj
     Set-Location = $NowLocation
 } else {
-    Write-Error "===>Pack Failed!!"
+    Write-Error "===>Failed!!"
 }
