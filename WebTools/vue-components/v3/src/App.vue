@@ -39,7 +39,7 @@ const printFFF = () => {
     <div>
       <label>EModal组件</label>
       <button @click="showEModal">弹窗</button>
-      <e-modal ref="modalRef" :top="20" @shown="printFFF" @hidden="printFFF">
+      <e-modal ref="modalRef" @shown="printFFF" @hidden="printFFF">
         <template #header>Header</template>
         <template #body>
           Body

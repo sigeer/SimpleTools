@@ -14,12 +14,19 @@
         ref="modalContentRef"
       >
         <div class="header" v-if="props.showHeader">
-          <slot name="header"></slot>
+          <div class="header-content">
+            <slot name="header"></slot>
+          </div>
+          <span class="header-control" @click="hide" aria-label="Close">
+            X
+          </span>
         </div>
+        <div class="border" v-if="props.showDivider"></div>
         <div class="body">
           {{ props.content }}
           <slot name="body"></slot>
         </div>
+        <div class="border" v-if="props.showDivider"></div>
         <div class="footer" v-if="props.showFooter">
           <slot name="footer">
             <button>确定</button>
@@ -59,6 +66,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showDivider: {
+    type: Boolean,
+    default: true,
+  },
   static: {
     type: Boolean,
     default: false,
@@ -69,11 +80,11 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['shown', 'hidden'])
+const emits = defineEmits(["shown", "hidden"]);
 
 const show = () => {
   configs.visible = true;
-  emits('shown');
+  emits("shown");
   nextTick((_) => {
     document.body.style.overflow = "hidden";
   });
@@ -81,7 +92,10 @@ const show = () => {
 
 const hide = () => {
   configs.visible = false;
-  emits('hidden');
+  emits("hidden");
+  nextTick((_) => {
+    document.body.style.overflow = null;
+  });
 };
 
 const modalContentRef = ref(null);
@@ -130,6 +144,15 @@ defineExpose({
 
 .e-modal.modal-content > .header {
   padding: 12px 12px 12px 12px;
+  display: flex;
+  line-height: 24px;
+}
+
+.e-modal.modal-content > .header > .header-content {
+  flex: 1;
+}
+.e-modal.modal-content > .header > .header-control {
+  cursor: pointer;
 }
 
 .e-modal.modal-content > .body {
@@ -148,5 +171,9 @@ defineExpose({
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.border {
+  border-bottom: 1px solid #e8e8e8;
 }
 </style>
