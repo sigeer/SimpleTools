@@ -14,7 +14,11 @@ const showEModal = (e) => {
   modalRef.value.show();
 };
 
-defineExpose({ afterSelected });
+const printFFF = () => {
+  console.log("FFF");
+}
+
+
 </script>
 
 <template>
@@ -35,8 +39,13 @@ defineExpose({ afterSelected });
     <div>
       <label>EModal组件</label>
       <button @click="showEModal">弹窗</button>
-      <e-modal ref="modalRef">
-        <template #body>111</template>
+      <e-modal ref="modalRef" :top="20" @shown="printFFF" @hidden="printFFF">
+        <template #header>Header</template>
+        <template #body>
+          Body
+          <button @click="printFFF()">11</button>
+        </template>
+        <template #footer>Footer</template>
       </e-modal>
     </div>
 

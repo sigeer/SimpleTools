@@ -1,21 +1,33 @@
 <template>
-  <div class="e-modal" v-show="configs.visible" ref="instance">
+  <Transition name="fade">
     <div
-      class="e-modal modal-content"
-      :style="`width: ${props.width}px;height: ${props.height}px`"
+      class="e-modal"
+      v-show="configs.visible"
+      ref="instance"
+      @click="handlerModalClick"
     >
-      <div class="header" v-if="props.showHeader">
-        <slot name="header"></slot>
-      </div>
-      <div class="body">
-        {{ props.content }}
-        <slot name="body"></slot>
-      </div>
-      <div class="footer" v-if="props.showFooter">
-        <slot name="footer"></slot>
+      <div
+        class="e-modal modal-content"
+        :style="`width: ${formatStyle(props.width)};height: ${formatStyle(
+          props.height
+        )}; margin-top:${formatStyle(props.top)}`"
+        ref="modalContentRef"
+      >
+        <div class="header" v-if="props.showHeader">
+          <slot name="header"></slot>
+        </div>
+        <div class="body">
+          {{ props.content }}
+          <slot name="body"></slot>
+        </div>
+        <div class="footer" v-if="props.showFooter">
+          <slot name="footer">
+            <button>确定</button>
+          </slot>
+        </div>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup>
@@ -34,7 +46,7 @@ const props = defineProps({
   },
   height: {
     type: [String, Number],
-    default: 600,
+    default: "fit-content",
   },
   showHeader: {
     type: Boolean,
@@ -47,11 +59,21 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  static: {
+    type: Boolean,
+    default: false,
+  },
+  top: {
+    type: [Object, Number],
+    default: undefined,
+  },
 });
+
+const emits = defineEmits(['shown', 'hidden'])
 
 const show = () => {
   configs.visible = true;
-
+  emits('shown');
   nextTick((_) => {
     document.body.style.overflow = "hidden";
   });
@@ -59,6 +81,23 @@ const show = () => {
 
 const hide = () => {
   configs.visible = false;
+  emits('hidden');
+};
+
+const modalContentRef = ref(null);
+
+const handlerModalClick = (evt) => {
+  if (!props.static && !modalContentRef.value.contains(evt.target)) {
+    hide();
+  }
+};
+
+const isNumber = (input) => {
+  return /^[0-9]+\.?[0-9]*$/.test(input);
+};
+
+const formatStyle = (input) => {
+  return isNumber(input) ? `${input}px` : input;
 };
 
 defineExpose({
@@ -90,14 +129,24 @@ defineExpose({
 }
 
 .e-modal.modal-content > .header {
-  padding: 32px 32px 32px 32px;
+  padding: 12px 12px 12px 12px;
 }
 
 .e-modal.modal-content > .body {
-  padding: 0px 32px 32px 32px;
+  padding: 0px 12px 12px 12px;
 }
 
 .e-modal.modal-content > .footer {
-  padding: 0px 32px 30px 32px;
+  padding: 0px 12px 12px 12px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
