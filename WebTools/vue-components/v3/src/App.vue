@@ -1,14 +1,10 @@
 <script setup>
-import UploadFile from "./components/UploadFile.vue";
+import FileUploadSelector from "./components/FileUploadSelector.vue";
 import EModal from "./components/EModal.vue";
 import { ref } from "vue";
 
-const uploadApi = (evt) => {
-  console.log(evt.file.getAll("files"));
-  return Promise.resolve({ a: 1 });
-};
 
-const afterUpload = (evt) => {
+const afterSelected = (evt) => {
   console.log(evt);
 };
 
@@ -18,19 +14,20 @@ const showEModal = (e) => {
   modalRef.value.show();
 };
 
-defineExpose({ uploadApi, afterUpload });
+defineExpose({ afterSelected });
 </script>
 
 <template>
   <div>
     <div>
       <label>UploadFile组件</label>
-      <upload-file
-        :uploader="uploadApi"
+      <file-upload-selector
         :multiple="true"
         container-class="up-container-div"
-        @uploaded="afterUpload"
-      ></upload-file>
+        @selected="afterSelected"
+      >
+      <a>选择</a>
+    </file-upload-selector>
     </div>
 
     <hr />
