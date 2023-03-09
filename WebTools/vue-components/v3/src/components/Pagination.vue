@@ -62,6 +62,8 @@ export default {
     };
   },
 
+  emits: ['loaded'],
+
   watch: {
     pageIndex() {
       this.$emit("loaded", this.paginationModel);
