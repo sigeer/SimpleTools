@@ -1,6 +1,8 @@
 <script setup>
 import FileUploadSelector from "./components/FileUploadSelector.vue";
 import EModal from "./components/EModal.vue";
+import WaitTag from "./components/WaitTag.vue";
+
 import { ref } from "vue";
 
 
@@ -16,6 +18,11 @@ const showEModal = (e) => {
 
 const printFFF = () => {
   console.log("FFF");
+}
+
+const click3 = (ppp) => {
+ppp.startWaiting();
+console.log(111);
 }
 
 
@@ -51,12 +58,16 @@ const printFFF = () => {
 
     <hr />
 
-    
+    <div>
+      <label>WaitTag组件</label>
+      <wait-tag :time="-1" @stop-waiting="printFFF" @start-waiting="printFFF">
+        <template #default="ppp">
+          <button @click="click3(ppp)">
+          倒计时<span v-if="ppp.time > 0">{{ ppp.time }}</span>
+        </button>
+        </template>
+      </wait-tag>
+    </div>    
   </div>
 </template>
 
-<style scoped>
-.up-container-div {
-  display: inline-flex;
-}
-</style>
