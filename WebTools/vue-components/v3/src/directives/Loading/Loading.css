@@ -1,0 +1,29 @@
+.loading-up {
+  position: relative;
+  display: inline-flex;
+}
+.loading-up div.loading-icon {
+  display: none;
+  margin-left: 5px;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-up.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading-up.loading div.loading-icon {
+  display: block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
