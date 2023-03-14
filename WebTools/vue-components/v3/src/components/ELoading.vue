@@ -1,7 +1,7 @@
 <template>
   <span :class="['loading-up-c', props.isLoading ? 'loading' : '']" ref="elRef">
     <span
-      :class="['loading-body', props.hideMainBody && isLoading ? 'hidden' : '']"
+      :class="['loading-body', props.hideMainBody && props.isLoading ? 'hidden' : '']"
     >
       <slot></slot>
     </span>
@@ -11,7 +11,6 @@
         <slot name="loading-tips"> </slot>
         <div v-if="showIcon" class="loading-icon" :style="iconStyle"></div>
       </span>
-      <div class="loading-mask"></div>
     </span>
   </span>
 </template>
@@ -67,13 +66,6 @@ const props = defineProps({
   animation: spin 0.8s linear infinite;
   margin-top: 2px;
 }
-.loading-up-c div.loading-mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
 
 .loading-up-c.loading {
   pointer-events: none;
@@ -85,7 +77,7 @@ const props = defineProps({
   display: block;
 }
 
-.loading-body.hidden {
+.loading-up-c.loading .loading-body.hidden {
   visibility: hidden;
 }
 

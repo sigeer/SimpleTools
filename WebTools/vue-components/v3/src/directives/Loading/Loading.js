@@ -11,10 +11,7 @@ export default {
   mounted(el, binding) {
     const loading = document.createElement("div");
     loading.className = "loading-icon";
-    const mask = document.createElement("div");
-    mask.className = "loading-mask";
     el.appendChild(loading);
-    el.appendChild(mask);
 
     el.classList.add("loading-up");
     reset(el, binding);
