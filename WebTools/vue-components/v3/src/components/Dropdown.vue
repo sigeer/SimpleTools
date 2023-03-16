@@ -7,7 +7,10 @@
   >
     <div class="dropdown-outview" :style="style" @click="toggleList()">
       <span class="display-text">
-        <span v-if=" states.selectedItem[props.valuePropName] === undefined" class="place-holder">
+        <span
+          v-if="states.selectedItem[props.valuePropName] === undefined"
+          class="place-holder"
+        >
           {{ props.placeHolder }}
         </span>
         <slot name="display" :item="states.selectedItem">
@@ -86,14 +89,7 @@
 </template>
 
 <script setup>
-import {
-  computed,
-  nextTick,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from "vue";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 
 const elRef = ref(0);
 const props = defineProps({
@@ -114,7 +110,7 @@ const props = defineProps({
     default: false,
   },
   style: {
-    type: String,
+    type: [String, Object],
     default: null,
   },
   containerStyle: {
@@ -142,8 +138,8 @@ const props = defineProps({
     default: null,
   },
   placeHolder: {
-    type: String
-  }
+    type: String,
+  },
 });
 
 const states = reactive({
@@ -167,11 +163,7 @@ watch(
       const obj = states.total.find(
         (x) => x[props.valuePropName] === props.modelValue
       );
-      if (obj) {
-        states.selectedItem = obj;
-      } else {
-        emits("update:modelValue", oldV);
-      }
+      states.selectedItem = obj ?? {};
     });
   },
   {
@@ -212,7 +204,7 @@ const toggleList = () => {
   toggleCore(!states.visible);
   if (states.visible) {
     nextTick(() => {
-      scrollToDataVal(props.modelValue);
+      scrollTo(props.modelValue);
     });
   }
 };
@@ -235,9 +227,7 @@ const calcPosition = () => {
       "z-index": maxZIndex + 1,
     };
     const distance = getElementBottomDistance(elRef.value);
-    if (distance - dropHeight <= 10) {
-      viewModel.direction = "up";
-    }
+    viewModel.direction = distance - dropHeight <= 10 ? "up" : "down";
   }
 };
 
@@ -261,20 +251,24 @@ const getElementBottomDistance = (element) => {
   return distance;
 };
 
-// 滚动到 data-val 等于目标值的标签
-const scrollToDataVal = (targetValue) => {
+const scrollTo = (targetValue) => {
   var tags = Array.prototype.slice.call(
     elRef.value.querySelectorAll("[data-val]")
   );
-  var targetIndex = -1;
+  let rangeHight = 0;
+  let targetIndex = -1;
   for (var i = 0; i < tags.length; i++) {
     if (tags[i].getAttribute("data-val") == targetValue) {
       targetIndex = i;
       break;
+    } else {
+      rangeHight += ((tags[i].getClientRects() || [])[0] || {}).height || 0;
     }
   }
   if (targetIndex !== -1) {
-    tags[targetIndex].scrollIntoView();
+    if (viewModel.direction === "up")
+      elRef.value.querySelector(".dropdown-items").scrollBottom = rangeHight;
+    else elRef.value.querySelector(".dropdown-items").scrollTop = rangeHight;
   }
 };
 </script>

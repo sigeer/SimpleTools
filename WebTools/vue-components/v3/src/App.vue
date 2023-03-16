@@ -7,6 +7,9 @@ import WaitTag from "./components/WaitTag.vue";
 import ELoading from "./components/ELoading.vue";
 
 import Dropdown from "./components/Dropdown.vue";
+import AutoComplete from "./components/AutoComplete.vue";
+import TextContent from "./components/TextContent.vue";
+import EmailAutoComplete from "./components/EmailAutoComplete.vue";
 
 import Loading from "./directives/Loading/Loading";
 const vLoading = Loading;
@@ -78,6 +81,11 @@ const dropDownChange = (evt) => {
 const setdModel = () => {
   dModel.value = (dModel.value + 1) % 8 || 8;
 };
+
+const autoCompleteSource = reactive({
+  value: "",
+  dataSource: ["11111", "22222", "33333", "44444", "55555", "666665","666664","666663","666662","666661","66666"],
+});
 </script>
 
 <template>
@@ -188,6 +196,7 @@ const setdModel = () => {
       </div>
       dModel.value: {{ dModel }}
       <button @click="setdModel">修改dModel值</button>
+      <input type="number" v-model="dModel" />
       <div>
         进阶用法：
         <div style="width: 200px">
@@ -208,23 +217,24 @@ const setdModel = () => {
       <div>
         自动计算direction，结合loading
         <div>
-          <dropdown
-            v-model="dModel"
-            :disabled="isDisabled"
-            v-loading="isLoading"
-            :data-source="dropdown.ds1"
-            style="width: 200px"
-            text-prop-name="key"
-            @change="dropDownChange"
-            can-search
-          >
-            <template #display="x">
-              {{ x.item.key }} - {{ x.item.value }}
-            </template>
-            <template #item="x">
-              {{ x.item.key }} - {{ x.item.value }}
-            </template>
-          </dropdown>
+          <e-loading :is-loading="isLoading">
+            <dropdown
+              v-model="dModel"
+              :disabled="isDisabled"
+              :data-source="dropdown.ds1"
+              style="width: 200px"
+              text-prop-name="key"
+              @change="dropDownChange"
+              can-search
+            >
+              <template #display="x">
+                {{ x.item.key }} - {{ x.item.value }}
+              </template>
+              <template #item="x">
+                {{ x.item.key }} - {{ x.item.value }}
+              </template>
+            </dropdown>
+          </e-loading>
           11111111111111111111111111111111111111111111111111
         </div>
       </div>
@@ -233,6 +243,49 @@ const setdModel = () => {
       <br />
 
       <hr />
+      <div>
+        auto-complete:
+        <div style="width: 200px">
+          <auto-complete
+            :disabled="isDisabled"
+            :data-source="autoCompleteSource.dataSource"
+            v-model="autoCompleteSource.value"
+          ></auto-complete>
+        </div>
+        <input v-model="autoCompleteSource.value" />
+      </div>
+      <hr />
+      <div>
+        email-auto-complete:
+        <div style="width: 200px">
+          <email-auto-complete
+            :disabled="isDisabled"
+            v-model="autoCompleteSource.value"
+            :extra-suffix="['@ok.com']"
+          ></email-auto-complete>
+        </div>
+        <input v-model="autoCompleteSource.value" />
+      </div>
+
+      <hr />
+      <div style="height: 500px">
+        TextContent:
+        <text-content>
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798 12313213231354646879798
+          12313213231354646879798
+        </text-content>
+      </div>
     </div>
   </div>
 </template>

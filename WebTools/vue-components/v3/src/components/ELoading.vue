@@ -71,7 +71,7 @@ const props = defineProps({
   pointer-events: none;
 }
 .loading-up-c.loading .loading-body {
-  opacity: 0.1;
+  opacity: 0.2;
 }
 .loading-up-c.loading span.loading-control {
   display: block;
