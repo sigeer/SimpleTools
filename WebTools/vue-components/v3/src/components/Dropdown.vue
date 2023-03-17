@@ -246,9 +246,11 @@ const getMaxZIndex = () => {
 
 // 获取元素距离底部的距离
 const getElementBottomDistance = (element) => {
-  var parent = element.offsetParent;
-  var distance = parent.offsetHeight - element.offsetTop - element.offsetHeight;
-  return distance;
+  // 获取元素相对于视口的位置信息
+  const rect = element.getBoundingClientRect();
+  // 计算元素距离页面底部的距离
+  const distanceToBottom = document.documentElement.clientHeight - rect.bottom;
+  return distanceToBottom;
 };
 
 const scrollTo = (targetValue) => {
