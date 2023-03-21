@@ -52,7 +52,7 @@ if ($PackResult.Length -gt 0) {
     if ([string]::IsNullOrEmpty($NugetServerPath)) {
         Write-Warning "===>Nupkg has success generated on $PackageFileObj, but [NugetServerPath] is NullOrEmpty."
     } else {
-        if (!$NugetServerPath.StartsWith("http") && Test-Path "${NugetServerPath}\$($PackageFileObj.Name)") {
+        if (!$NugetServerPath.StartsWith("http") -and (Test-Path "${NugetServerPath}\$($PackageFileObj.Name)")) {
             Write-Warning "Package $PackageFileObj Exited"
         } else {
             $PushCommand = "nuget push ${PackageFileObj} -Src $NugetServerPath -SkipDuplicate"
