@@ -1,7 +1,7 @@
 <template>
   <div ref="elRef" class="text-content-container">
     <div :style="states.style" :class="[states.overRange ? 'collapsed' : '']">
-      <slot></slot>
+      {{ displayText }}
     </div>
     <template v-if="states.needOverRange">
       <transition>
@@ -17,8 +17,17 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref } from "vue";
 const props = defineProps({
+  text: {
+    type: String,
+    default: "",
+  },
+
+  request: {
+    type: Function,
+  },
+
   maxRow: {
     type: Number,
     default: 3,
@@ -37,16 +46,26 @@ const props = defineProps({
 
 const elRef = ref(null);
 
+const displayText = ref(null);
+const fullStrCache = ref(null);
+const cacheStr = ref(null);
+
 const states = reactive({
   overRange: true,
 
   needOverRange: false,
 
   style: {},
+
+  isLoading: false,
 });
 
 onMounted(() => {
-  getContentHeight();
+  displayText.value = props.text;
+  cacheStr.value = props.text;
+  nextTick(() => {
+    getContentHeight();
+  });
 });
 
 const getContentHeight = () => {
@@ -78,8 +97,28 @@ const syncView = () => {
 };
 
 const toggle = () => {
-  states.overRange = !states.overRange;
-  syncView();
+  if (states.overRange && !fullStrCache.value) {
+    if (states.isLoading) return;
+    states.isLoading = true;
+    props
+      .request()
+      .then((res) => {
+        fullStrCache.value = res;
+        cacheStr.value = displayText.value;
+        displayText.value = res;
+        states.overRange = !states.overRange;
+        syncView();
+      })
+      .finally(() => {
+        states.isLoading = false;
+      });
+  } else {
+    states.overRange = !states.overRange;
+    const tmp = displayText.value;
+    displayText.value = cacheStr.value;
+    cacheStr.value = tmp;
+    syncView();
+  }
 };
 </script>
 

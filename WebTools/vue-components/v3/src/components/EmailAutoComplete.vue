@@ -4,13 +4,12 @@
     @search="handleSearch"
     :data-source="states.processedDs"
     :disabled="props.disabled"
-    @change="handleChange"
   >
   </auto-complete>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import AutoComplete from "./AutoComplete.vue";
 
 const props = defineProps({
@@ -27,25 +26,28 @@ const props = defineProps({
     default: () => []
   }
 });
+const emits = defineEmits(["update:modelValue", "change"]);
 const proxyValue = ref("");
 watch(
   () => props.modelValue,
   () => {
-    if (proxyValue.value !== props.modelValue) proxyValue.value = props.modelValue;
+    if (proxyValue.value !== props.modelValue) {
+      proxyValue.value = props.modelValue;
+      emits("change", proxyValue.value);
+    }
   },
   {
     immediate: true,
   }
 );
+watch(proxyValue, () => {
+  emits("update:modelValue", proxyValue.value);
+})
 
 const states = reactive({
   processedDs: [],
 });
 
-const emits = defineEmits("update:modelValue", "change");
-const handleChange = () => {
-  emits("update:modelValue", proxyValue.value);
-};
 const emailSuffix = [
   "@qq.com",
   "@gmail.com",
