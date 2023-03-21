@@ -11,6 +11,7 @@ import AutoComplete from "./components/AutoComplete.vue";
 import TextContent from "./components/TextContent.vue";
 import TextContentAsync from "./components/TextContentAsync.vue";
 import EmailAutoComplete from "./components/EmailAutoComplete.vue";
+import ImageFullScreen from "./components/ImageFullScreen.vue";
 
 import Loading from "./directives/Loading/Loading";
 const vLoading = Loading;
@@ -93,12 +94,23 @@ const longStr = ref("11123365111233651112336511123365111233651112336511123365111
 const loadTotal = () => {
   return Promise.resolve('1');
 }
+
+
+const imgRef = ref(null);
+const showImgSingle = () => {
+  imgRef.value.show('test', 'https://picsum.photos/600/600');
+}
+
+const showImgMultiply = () => {
+  imgRef.value.show([{name: 'test1', src: 'https://picsum.photos/600/600'},{name: 'test2', src: 'https://picsum.photos/500/600'}]);
+}
 </script>
 
 <template>
   <div>
     <div>
       <button @click="toggleDisabled">toggle disable</button>
+      isDisabled: {{  isDisabled }}
     </div>
     <div>
       <label>UploadFile组件</label>
@@ -312,6 +324,13 @@ const loadTotal = () => {
         TextContentAsync:
         <text-content-async :text="longStr" :request="loadTotal">
         </text-content-async>
+      </div>
+
+      <hr />
+      <div style="height: 500px">
+        ImageFullScreen: <button @click="showImgSingle">showImgSingle</button>
+        <button @click="showImgMultiply">showImgMultiply</button>
+        <image-full-screen ref="imgRef"></image-full-screen>
       </div>
     </div>
   </div>

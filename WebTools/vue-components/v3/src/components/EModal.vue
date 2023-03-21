@@ -82,7 +82,9 @@ const props = defineProps({
 
 const emits = defineEmits(["shown", "hidden"]);
 
+let bodyOverflow = null;
 const show = () => {
+  bodyOverflow = document.body.style.overflow;
   configs.visible = true;
   emits("shown");
   nextTick((_) => {
@@ -94,7 +96,7 @@ const hide = () => {
   configs.visible = false;
   emits("hidden");
   nextTick((_) => {
-    document.body.style.overflow = null;
+    document.body.style.overflow = bodyOverflow;
   });
 };
 
