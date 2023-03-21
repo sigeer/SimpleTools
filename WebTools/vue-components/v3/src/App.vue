@@ -98,7 +98,7 @@ const loadTotal = () => {
 
 const imgRef = ref(null);
 const showImgSingle = () => {
-  imgRef.value.show('test', 'https://picsum.photos/600/600');
+  imgRef.value.show('https://picsum.photos/600/600');
 }
 
 const showImgMultiply = () => {
