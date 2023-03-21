@@ -313,3 +313,21 @@
   transform: translateY(50%);
   content: "";
 }
+
+/* 滚动条样式修改 */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+/* 滚动条样式修改 */
