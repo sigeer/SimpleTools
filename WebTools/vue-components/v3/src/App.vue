@@ -12,6 +12,7 @@ import TextContent from "./components/TextContent.vue";
 import TextContentAsync from "./components/TextContentAsync.vue";
 import EmailAutoComplete from "./components/EmailAutoComplete.vue";
 import ImageFullScreen from "./components/ImageFullScreen.vue";
+import EInput from "./components/EInput.vue";
 
 import Loading from "./directives/Loading/Loading";
 const vLoading = Loading;
@@ -104,6 +105,11 @@ const showImgSingle = () => {
 const showImgMultiply = () => {
   imgRef.value.show([{name: 'test1', src: 'https://picsum.photos/600/600'},{name: 'test2', src: 'https://picsum.photos/500/600'}]);
 }
+
+const eInputValue = ref(null);
+const formatInput = (v) => {
+  return '$' + v;
+}
 </script>
 
 <template>
@@ -122,6 +128,13 @@ const showImgMultiply = () => {
         <a>选择</a>
       </file-upload-selector>
     </div>
+
+    <hr />
+      <div style="height: 500px">
+        E-Input: 
+        <e-input type="text" v-model="eInputValue" :disabled="isDisabled" :format="formatInput" maxlength="10" suffix="W">
+        </e-input>
+      </div>
 
     <hr />
 
