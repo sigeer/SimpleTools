@@ -183,19 +183,20 @@ let bodyOverflow = null;
 
 /**
  *
- * @param {String} name fileName or list
  * @param {String} src url or index of list
+ * @param {String} name fileName or list
  */
-const show = (name, src) => {
+const show = (src, name) => {
   bodyOverflow = document.body.style.overflow;
   states.visible = true;
   document.body.style.overflow = "hidden";
 
   resetModel();
   nextTick(() => {
-    if (name instanceof Array) {
-      model.index = src ?? 0;
-      model.list = name;
+    if (src instanceof Array) {
+      model.index = name ?? 0;
+      model.list = src;
+      model.zoom = 1;
       readList();
     } else {
       model.index = 0;
