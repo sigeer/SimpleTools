@@ -7,12 +7,15 @@
     </span>
     <input
       v-if="isDisplay"
+      type="text"
       ref="displayRef"
       key="1"
       tag="display"
       class="e-input-form"
-      v-model="displayText"
-      v-bind="$attrs"
+      :value="displayText"
+      :class="$attrs.class"
+      :style="$attrs.style"
+      :placeholder="$attrs.placeholder"
       @focus="handleFocus"
     />
     <input
@@ -51,7 +54,7 @@ const props = defineProps({
     type: Function,
   },
 });
-const slots = useSlots()
+const slots = useSlots();
 const isDisplay = ref(true);
 const model = ref(null);
 const inputRef = ref(null);
@@ -73,8 +76,8 @@ const handleFocus = (evt) => {
   emits("focus", evt);
   isDisplay.value = false;
   nextTick(() => {
-    inputRef.value.focus()
-  })
+    inputRef.value.focus();
+  });
 };
 const handleBlur = (evt) => {
   emits("blur", evt);
@@ -84,9 +87,11 @@ const handleBlur = (evt) => {
 
 <style scoped>
 .e-input-container {
+  width: 100%;
   border: 1px solid #dee2e6;
-  height: 1.5em;
+  padding: 0.25rem 0.5em;
   display: inline-flex;
+  box-sizing: border-box;
   cursor: text;
   font-weight: 400;
   color: #212529;
@@ -99,16 +104,21 @@ const handleBlur = (evt) => {
 }
 
 .e-input-container:focus-within {
-    border: 1px solid #6bb5ff;
+  border: 1px solid #6bb5ff;
+  box-shadow: 0px 0px 15px rgb(0 0 0 / 5%);
 }
 
 .e-input-form {
   border: none;
   outline: none;
+  padding: 0px;
+  margin: 0px;
   width: 100%;
+  line-height: inherit;
 }
 
-.e-input-prefix, .e-input-suffix {
-    padding: 0px 6px;
+.e-input-prefix,
+.e-input-suffix {
+  padding: 0px 6px;
 }
 </style>

@@ -131,3 +131,11 @@ export function getMaxZIndex() {
       return Math.max(a, z);
   }, 1);
 }
+
+export const getElementBottomDistance = (element) => {
+  // 获取元素相对于视口的位置信息
+  const rect = element.getBoundingClientRect();
+  // 计算元素距离页面底部的距离
+  const distanceToBottom = document.documentElement.clientHeight - rect.bottom;
+  return distanceToBottom;
+};
