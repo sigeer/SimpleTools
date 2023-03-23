@@ -14,8 +14,11 @@ import EmailAutoComplete from "./components/EmailAutoComplete.vue";
 import ImageFullScreen from "./components/ImageFullScreen.vue";
 import EInput from "./components/EInput.vue";
 
+import Draggable from "./directives/Draggable/Draggable";
 import Loading from "./directives/Loading/Loading";
 const vLoading = Loading;
+const vDraggable = Draggable;
+
 
 const isDisabled = ref(false);
 const toggleDisabled = () => {
@@ -115,7 +118,7 @@ const formatInput = (v) => {
 <template>
   <div>
     <div>
-      <button @click="toggleDisabled">toggle disable</button>
+      <button @click="toggleDisabled" v-draggable>toggle disable</button>
       isDisabled: {{  isDisabled }}
     </div>
     <div>
