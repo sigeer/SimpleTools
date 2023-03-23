@@ -132,7 +132,7 @@ const formatInput = (v) => {
     <hr />
       <div style="height: 500px">
         E-Input: 
-        <e-input type="text" v-model="eInputValue" :disabled="isDisabled" :format="formatInput" maxlength="10" suffix="W">
+        <e-input type="number" v-model="eInputValue" :disabled="isDisabled" :format="formatInput" maxlength="10" suffix="W">
         </e-input>
       </div>
 

@@ -4,15 +4,8 @@
     ref="elRef"
     :class="[props.disabled ? 'disabled' : '']"
   >
-    <div>
-      <input
-        type="text"
-        autocomplete="off"
-        autofocus
-        v-model="states.value"
-        :disabled="props.disabled"
-        @focus="handleFocus"
-      />
+    <div class="auto-complete-outview">
+      <e-input v-model="states.value" @focus="handleFocus" v-bind="$attrs" autocomplete="off"></e-input>
     </div>
     <div
       :style="viewModel.dropdownStyle"
@@ -40,6 +33,7 @@
 
 <script setup>
 import { reactive, ref, onMounted, watch, nextTick, computed } from "vue";
+import EInput from "./EInput.vue";
 
 const elRef = ref(null);
 onMounted(() => {
@@ -178,7 +172,7 @@ const viewModel = reactive({
 
 const calcPosition = () => {
   if (!viewModel.dropdownStyle.display) {
-    const rangeHight = 23;
+    const rangeHight = 16 * 2;
     const maxZIndex = getMaxZIndex();
     const dropHeight = props.maxCount * rangeHight + 2;
     viewModel.dropdownStyle = {
@@ -187,6 +181,10 @@ const calcPosition = () => {
     };
     const distance = getElementBottomDistance(elRef.value);
     viewModel.direction = distance - dropHeight <= 10 ? "up" : "down";
+    if (viewModel.direction === 'up') {
+      const inputStyle = window.getComputedStyle(document.querySelector(".auto-complete-outview"), null);
+      viewModel.dropdownStyle.bottom = inputStyle.height;
+    }
   }
 };
 
@@ -339,7 +337,7 @@ const isStringNullOrEmpty = function (e) {
 
 .auto-complete-items.up {
   flex-direction: column-reverse;
-  bottom: 2em;
+  /* bottom: calc(2em + 2px); */
 }
 
 .auto-complete-items > ul {
@@ -352,7 +350,7 @@ const isStringNullOrEmpty = function (e) {
 .auto-complete-items ul > li {
   cursor: pointer;
   display: block;
-  padding: 5px 10px;
+  padding: 5px 0.5em;
 }
 
 .auto-complete-items ul > li:hover,
@@ -367,7 +365,7 @@ const isStringNullOrEmpty = function (e) {
   display: block;
   text-decoration: none;
   color: black;
-  font-size: 12px;
+  font-size: 0.75em;
   word-wrap: break-word;
 }
 
@@ -376,38 +374,11 @@ const isStringNullOrEmpty = function (e) {
   text-decoration: none;
   background-color: #66afe9;
 }
-.dropdown-outview {
-  display: flex;
-  box-sizing: border-box;
-  height: 2.25em;
-  padding: 0.375rem 0.75em;
-  font-weight: 400;
-  color: #212529;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #dee2e6;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  cursor: pointer;
-  position: relative;
+.auto-complete-items.up {
+  border-bottom: none;
 }
-.dropdown-outview > .display-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-}
-.dropdown-outview > .display-text .place-holder {
-  color: #8f8f8f;
-}
-.dropdown-outview .arrow-icon {
-  flex: 0 0 1em;
-  zoom: 0.8;
-}
-
-.dropdown-outview .arrow-icon > svg {
-  transition: transform 0.3s;
+.auto-complete-items.down {
+  border-top: none;
 }
 
 .v-enter-active,

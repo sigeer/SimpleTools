@@ -5,7 +5,12 @@
     :class="[props.disabled ? 'disabled' : '']"
     ref="elRef"
   >
-    <div class="dropdown-outview" :style="style" @click="toggleList()">
+    <div
+      class="dropdown-outview"
+      :class="{ 'dropdown-visible': states.visible }"
+      :style="style"
+      @click="toggleList()"
+    >
       <span class="display-text">
         <span
           v-if="states.selectedItem[props.valuePropName] === undefined"
@@ -45,27 +50,26 @@
         v-if="props.canSearch"
         :style="viewModel.searchStyle"
       >
-        <input
-          type="text"
-          autocomplete="off"
-          autofocus
-          v-model="states.searchText"
-        /><i class="search-icon">
-          <svg
-            viewBox="64 64 896 896"
-            data-icon="search"
-            width="1em"
-            height="1em"
-            fill="currentColor"
-            aria-hidden="true"
-            focusable="false"
-            class=""
-          >
-            <path
-              d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0 0 11.6 0l43.6-43.5a8.2 8.2 0 0 0 0-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
-            ></path>
-          </svg>
-        </i>
+        <e-input v-model="states.searchText" autocomplete="off" autofocus>
+          <template #suffix>
+            <i class="search-icon">
+              <svg
+                viewBox="64 64 896 896"
+                data-icon="search"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                aria-hidden="true"
+                focusable="false"
+                class=""
+              >
+                <path
+                  d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0 0 11.6 0l43.6-43.5a8.2 8.2 0 0 0 0-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
+                ></path>
+              </svg>
+            </i>
+          </template>
+        </e-input>
       </div>
       <div :style="viewModel.dropdownPoistionStyle" class="dropdown-items">
         <ul>
@@ -90,6 +94,7 @@
 
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
+import EInput from "./EInput.vue";
 
 const elRef = ref(0);
 const props = defineProps({
@@ -217,7 +222,7 @@ const viewModel = reactive({
 });
 const calcPosition = () => {
   if (!viewModel.dropdownPoistionStyle.display) {
-    const rangeHight = 23;
+    const rangeHight = 16 * 2;
     const maxZIndex = getMaxZIndex();
     const dropHeight = props.maxCount * rangeHight + 2;
     viewModel.dropdownPoistionStyle = {
@@ -304,11 +309,8 @@ const scrollTo = (targetValue) => {
   bottom: 2.25em;
 }
 .dropdown-inview .dropdown-search {
-  display: inline-flex;
-  background-color: #fff;
-  padding: 0.375em 0.75em;
-  border-left: 1px solid #dee2e6;
-  border-right: 1px solid #dee2e6;
+  border-top: none;
+  border-bottom: none;
 }
 
 .dropdown-inview .dropdown-search > input {
@@ -348,7 +350,7 @@ const scrollTo = (targetValue) => {
 .dropdown-items ul > li {
   cursor: pointer;
   display: block;
-  padding: 5px 10px;
+  padding: 5px 0.5em;
 }
 
 .dropdown-items ul > li:hover {
@@ -375,7 +377,7 @@ const scrollTo = (targetValue) => {
   display: flex;
   box-sizing: border-box;
   height: 2.25em;
-  padding: 0.375rem 0.75em;
+  padding: 0.375rem 0.5em;
   font-weight: 400;
   color: #212529;
   background-color: #fff;
@@ -387,6 +389,11 @@ const scrollTo = (targetValue) => {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   cursor: pointer;
   position: relative;
+}
+
+.dropdown-outview.dropdown-visible {
+  border: 1px solid #6bb5ff;
+  box-shadow: 0px 0px 15px rgb(0 0 0 / 5%);
 }
 .dropdown-outview > .display-text {
   overflow: hidden;
@@ -403,6 +410,14 @@ const scrollTo = (targetValue) => {
 
 .dropdown-outview .arrow-icon > svg {
   transition: transform 0.3s;
+}
+
+.dropdown-inview.up > .dropdown-items {
+  border-bottom: none;
+}
+
+.dropdown-inview.down > .dropdown-items {
+  border-top: none;
 }
 
 .v-enter-active,
