@@ -145,6 +145,10 @@ const props = defineProps({
   placeHolder: {
     type: String,
   },
+  autoFill: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const states = reactive({
@@ -176,9 +180,13 @@ watch(
   }
 );
 const ds = computed(() => {
-  return states.total.filter(
+  const filteredDs = states.total.filter(
     (x) => x[props.textPropName].indexOf(states.searchText) !== -1
   );
+  if (filteredDs.length === 1 && props.autoFill) {
+    select(filteredDs[0]);
+  }
+  return filteredDs;
 });
 
 onMounted(() => {
