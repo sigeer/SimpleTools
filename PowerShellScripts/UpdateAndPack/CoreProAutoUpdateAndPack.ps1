@@ -51,7 +51,7 @@ if ($PackResult.Length -gt 0) {
     $PackageFileObj = $PackResult[0]
 
     if (!$NugetServerPath.StartsWith("http") -and (Test-Path "${NugetServerPath}\$($PackageFileObj.Name)")) {
-        Write-Warning "Package $PackageFileObj Exited"
+        Write-Error "Package $PackageFileObj Exited"
     } else {
         $PushCommand = "dotnet nuget push ${PackageFileObj} -s $NugetServerPath --skip-duplicate"
         Write-Host "===>Step5. Push | Command: $PushCommand" -ForegroundColor Green
