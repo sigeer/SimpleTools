@@ -5,6 +5,11 @@ Param(
     [String]$NugetServerPath
 )
 
+if ([string]::IsNullOrEmpty($NugetServerPath)) {
+    Write-Error "===>[NugetServerPath] is NullOrEmpty."
+    return
+}
+
 $NowLocation = $MyInvocation.MyCommand.Definition
 Write-Host "NowLocation: $NowLocation" -ForegroundColor Green
 
@@ -45,16 +50,12 @@ if ($PackResult.Length -gt 0) {
     #找到最新的包
     $PackageFileObj = $PackResult[0]
 
-    if ([string]::IsNullOrEmpty($NugetServerPath)) {
-        Write-Warning "===>Nupkg has success generated on $PackageFileObj, but [NugetServerPath] is NullOrEmpty."
+    if (!$NugetServerPath.StartsWith("http") -and (Test-Path "${NugetServerPath}\$($PackageFileObj.Name)")) {
+        Write-Warning "Package $PackageFileObj Exited"
     } else {
-        if (!$NugetServerPath.StartsWith("http") -and (Test-Path "${NugetServerPath}\$($PackageFileObj.Name)")) {
-            Write-Warning "Package $PackageFileObj Exited"
-        } else {
-            $PushCommand = "dotnet nuget push ${PackageFileObj} -s $NugetServerPath --skip-duplicate"
-            Write-Host "===>Step5. Push | Command: $PushCommand" -ForegroundColor Green
-            Invoke-Expression $PushCommand
-        }
+        $PushCommand = "dotnet nuget push ${PackageFileObj} -s $NugetServerPath --skip-duplicate"
+        Write-Host "===>Step5. Push | Command: $PushCommand" -ForegroundColor Green
+        Invoke-Expression $PushCommand
     }
 
     Remove-Item -Path $PackageFileObj
