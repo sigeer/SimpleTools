@@ -6,6 +6,5 @@ for ($i = $wordingArray.Count - 1; $i -gt 0; $i--) {
     <# Action that will repeat until the condition is met #>
     $result = $result + $wordingArray[$i] + [char]0x202e
 }
-Write-Host $wordingArray.Count
 Set-Clipboard -Value $result
 Write-Host "Copied"
