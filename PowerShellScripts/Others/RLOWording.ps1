@@ -2,12 +2,14 @@ while ($true) {
     Write-Host "Input..."
     $wording = Read-Host
     $wordingArray = $wording -split ""
-    $result = ''
+    $result = [char]0x202e 
     for ($i = $wordingArray.Count - 1; $i -gt 0; $i--) {
         <# Action that will repeat until the condition is met #>
-        $result = $result + $wordingArray[$i] + [char]0x202e
+        $result += $wordingArray[$i]
     }
+    # 正文恢复顺序
     $result += [char]0x202d
+    # 系统文本恢复顺序
     $result += [char]0x202d
     Set-Clipboard -Value $result
     Write-Host "Copied"
