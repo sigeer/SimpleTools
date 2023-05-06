@@ -16,7 +16,7 @@ $AuthCookie = New-Object System.Net.Cookie(".Cnblogs.AspNetCore.Cookies", $Cooki
 $WebSession.Cookies.Add($AuthCookie)
 $Response = Invoke-WebRequest @PostParameters -WebSession $WebSession
 if ($Response.StatusCode -eq 200) {
-    $Response.Content -match '<span class="ing_body" id="ing_body_(\d+)">'
+    $FirstMath = $Response.Content -match '<span class="ing_body" id="ing_body_(\d+)">'
     $NowId = $Matches[1]
     #Write-Host $Response.Content
     $RegStr = '<div class="feed_body" id="feed_content_'+$NowId+'">(((?!删除).|\n)*)\<img(\s)*alt=((?!\]).|\n)*星\]'

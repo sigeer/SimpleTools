@@ -1,8 +1,9 @@
 ﻿param (
-    [int]$Count = 0,
+    [int]$Count = 1,
     [string]$Content = $null,
     [bool]$SkipDel = $false,
-    [string]$Tag = $null
+    [string]$Tag = $null,
+    [string]$Mode = "Normal"
 )
 
 if ([string]::IsNullOrEmpty($Content)) {
@@ -13,7 +14,8 @@ if ([string]::IsNullOrEmpty($Content)) {
 if ($Count -eq $null -or $Count -eq 0) {
     if (Test-Path env:Count) {
         $Count = (Get-Item env:Count).Value -as [int]
-    } else {
+    }
+    else {
         $Count = 0
     }
 }
@@ -54,16 +56,19 @@ $NowCount = $InitNowCount
 $SuccessCount = $InitSuccessCount
 $ToDay = (Get-Date).Day
 while ($true) {
-    if (((Get-Date).Hour -le 8) -or ((Get-Date).Hour -gt 18)) {
-        Write-Host "下班时间降低频率。"
-        Start-Sleep -Seconds 3600
-        continue
+    if ($Mode -eq "Auto") {
+        if (((Get-Date).Hour -le 8) -or ((Get-Date).Hour -gt 18)) {
+            Write-Host "下班时间降低频率。"
+            Start-Sleep -Seconds 3600
+            continue
+        }
+        if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
+            Write-Host "周末降低频率。"
+            Start-Sleep -Seconds 3600
+            continue
+        }
     }
-    if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
-        Write-Host "周末降低频率。"
-        Start-Sleep -Seconds 3600
-        continue
-    }
+
     
     if ($ToDay -ne (Get-Date).Day) {
         $NowCount = 0
@@ -75,7 +80,7 @@ while ($true) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
-        Write-Host ("==========>No."+ $NowCount)
+        Write-Host ("==========>No." + $NowCount)
         
         $Content = Get-PostContent
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
@@ -83,7 +88,7 @@ while ($true) {
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
 
         if (($SuccessCount + 1) -eq $Count) {
-            $PostContent = "[终结技] 最后再拿一颗"
+            $PostContent = "最后再拿一颗"
         }
 
         $PostResult = ./PostIng.ps1 -Content $PostContent
@@ -93,13 +98,16 @@ while ($true) {
                 if ($Id -eq -1) {
                     Write-Error '请求失败，可能是Cookie过期或者被ban -1'
                     break
-                } elseif ($Id -eq 0) {
+                }
+                elseif ($Id -eq 0) {
                     $SuccessCount++ 
-                } else {
+                }
+                else {
                     ./DelIng.ps1 -Id $Id
                 }
             }
-        } else {
+        }
+        else {
             Write-Error '请求失败，可能是Cookie过期或者被ban -2'
             break
         }
