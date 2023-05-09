@@ -1,39 +1,9 @@
-﻿param (
+﻿# 简化版
+
+param (
     [int]$Count = 1,
-    [string]$Content = $null,
-    [bool]$SkipDel = $false,
-    [string]$Tag = $null,
-    [string]$Mode = "Normal"
+    [string]$Tag = $null
 )
-
-if ([string]::IsNullOrEmpty($Content)) {
-    if (Test-Path env:Content) {
-        $Content = (Get-Item env:Content).Value
-    }
-}
-if ($Count -eq $null -or $Count -eq 0) {
-    if (Test-Path env:Count) {
-        $Count = (Get-Item env:Count).Value -as [int]
-    }
-    else {
-        $Count = 0
-    }
-}
-
-if ([string]::IsNullOrEmpty($Tag)) {
-    if (Test-Path env:Tag) {
-        $Tag = (Get-Item env:Tag).Value
-    }
-}
-
-$InitNowCount = 0
-if (Test-Path env:InitNowCount) {
-    $InitNowCount = (Get-Item env:InitNowCount).Value -as [int]
-}
-$InitSuccessCount = 0
-if (Test-Path env:InitSuccessCount) {
-    $InitSuccessCount = (Get-Item env:InitSuccessCount).Value -as [int]
-}
 
 function Get-PostContent {
     param (
@@ -56,37 +26,16 @@ function Get-PostContent {
 
 Write-Host "=======Begin======="
 Write-Host "[Target]: $Count"
-$NowCount = $InitNowCount
-$SuccessCount = $InitSuccessCount
-$ToDay = (Get-Date).Day
+$NowCount = 0
+$SuccessCount = 0
 while ($true) {
-    if ($Mode -eq "Auto") {
-        if (((Get-Date).Hour -le 8) -or ((Get-Date).Hour -gt 18)) {
-            Write-Host "下班时间降低频率。"
-            Start-Sleep -Seconds 3600
-            continue
-        }
-        if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
-            Write-Host "周末降低频率。"
-            Start-Sleep -Seconds 3600
-            continue
-        }
-    }
-
-    
-    if ($ToDay -ne (Get-Date).Day) {
-        $NowCount = 0
-        $SuccessCount = 0
-        $ToDay = (Get-Date).Day
-    }
-
     if ($SuccessCount -lt $Count) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
-        Write-Host ("==========>No." + $NowCount)
-        
-        $Content = Get-PostContent -Value $Content -TagValue $Tag
+        Write-Host ("==========>No." + $NowCount + "==Enter：")
+        $fromInput = Read-Host
+        $Content = Get-PostContent -Value $fromInput -TagValue $Tag
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate

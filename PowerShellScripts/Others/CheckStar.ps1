@@ -6,6 +6,7 @@
         "accept-language" = "zh-CN,zh;q=0.9"
         "accept-encoding" = "gzip, deflate, br"
         "content-type" = "application/json; charset=utf-8"
+        "referer"       = "https://ing.cnblogs.com/"
         "x-requested-with" = "XMLHttpRequest"
     }
     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
@@ -16,7 +17,7 @@ $AuthCookie = New-Object System.Net.Cookie(".Cnblogs.AspNetCore.Cookies", $Cooki
 $WebSession.Cookies.Add($AuthCookie)
 $Response = Invoke-WebRequest @PostParameters -WebSession $WebSession
 if ($Response.StatusCode -eq 200) {
-    $Response.Content -match '<span class="ing_body" id="ing_body_(\d+)">'
+    $FirstMath = $Response.Content -match '<span class="ing_body" id="ing_body_(\d+)">'
     $NowId = $Matches[1]
     #Write-Host $Response.Content
     $RegStr = '<div class="feed_body" id="feed_content_'+$NowId+'">(((?!删除).|\n)*)\<img(\s)*alt=((?!\]).|\n)*星\]'

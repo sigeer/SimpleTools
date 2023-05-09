@@ -12,10 +12,11 @@ $PostParameters = @{
     Method          = 'POST'
     Body            = $PostBody
     Headers         = @{
-        "accept"       = "application/json, text/javascript, */*; q=0.01"
+        "accept"        = "application/json, text/javascript, */*; q=0.01"
         "accept-language" = "zh-CN,zh;q=0.9"
         "accept-encoding" = "gzip, deflate, br"
-        "Content-Type" = "application/x-www-form-urlencoded"
+        "Content-Type"  = "application/x-www-form-urlencoded"
+        "referer"       = "https://ing.cnblogs.com/"
     }
     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
 
