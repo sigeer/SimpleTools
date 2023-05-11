@@ -7,29 +7,6 @@ param (
     [string]$Suffix = $null
 )
 
-function Get-PostContent {
-    param (
-        $TagValue = $null,
-        $Value = $null,
-        $SuffixValue = $null
-    )
-    $UseRandom = [string]::IsNullOrEmpty($Value)
-    if ($UseRandom -and (Test-Path Wording.txt)) {
-        $Value = $($(Get-Content ./Wording.txt) -split "\r\n") | Get-Random
-    }
-    if (![string]::IsNullOrEmpty($TagValue)) {
-        $Value = "[" + $TagValue + "]" + " " + $Value.TrimStart()
-    }
-    if ([string]::IsNullOrEmpty($Value)) {
-        $Value = "[标签]"
-    }
-    if (![string]::IsNullOrEmpty($SuffixValue)) {
-        $Value = $Value + " " + $SuffixValue
-    }
-
-    return $Value.TrimStart()
-}
-
 
 Write-Host "=======Begin======="
 Write-Host "[Target]: $Count"
@@ -40,8 +17,7 @@ while ($true) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
-        $tmpSufix = ./RLOWordingCore.ps1 -Content $Suffix
-        $PostContent = Get-PostContent -Value $Content -TagValue $Tag -SuffixValue $tmpSufix
+        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix
         $PostContent = $PostContent -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate

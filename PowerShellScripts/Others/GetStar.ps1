@@ -35,25 +35,6 @@ if (Test-Path env:InitSuccessCount) {
     $InitSuccessCount = (Get-Item env:InitSuccessCount).Value -as [int]
 }
 
-function Get-PostContent {
-    param (
-        $TagValue = $null,
-        $Value = $null
-    )
-    $UseRandom = [string]::IsNullOrEmpty($Value)
-    if ($UseRandom -and (Test-Path Wording.txt)) {
-        $Value = $($(Get-Content ./Wording.txt) -split "\r\n") | Get-Random
-    }
-    if (![string]::IsNullOrEmpty($TagValue)) {
-        $Value = "[" + $TagValue + "]" + " " + $Value.TrimStart()
-    }
-    if ([string]::IsNullOrEmpty($Value)) {
-        $Value = "[标签]"
-    }
-    return $Value.TrimStart()
-}
-
-
 Write-Host "=======Begin======="
 Write-Host "[Target]: $Count"
 $NowCount = $InitNowCount
@@ -86,7 +67,7 @@ while ($true) {
 
         Write-Host ("==========>No." + $NowCount)
         
-        $Content = Get-PostContent -Value $Content -TagValue $Tag
+        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag
         $PostContent = $Content -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
