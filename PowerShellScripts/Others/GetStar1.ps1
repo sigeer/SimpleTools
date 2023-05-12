@@ -22,10 +22,6 @@ while ($true) {
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
 
-        if (($SuccessCount + 1) -eq $Count) {
-            $PostContent = "算了算了，最后再拿一颗收工"
-        }
-
         $PostResult = ./PostIng.ps1 -Content $PostContent
         if ($PostResult) {
             if (!$SkipDel) {
