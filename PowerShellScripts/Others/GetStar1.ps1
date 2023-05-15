@@ -4,7 +4,8 @@ param (
     [int]$Count = 1,
     [string]$Content = $null,
     [string]$Tag = $null,
-    [string]$Suffix = $null
+    [string]$Suffix = $null,
+    [bool]$ShowStar = $false
 )
 
 
@@ -17,7 +18,7 @@ while ($true) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
-        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix
+        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix -ShowStar $ShowStar
         $PostContent = $PostContent -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
