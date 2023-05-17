@@ -23,7 +23,7 @@ if ($ShowStar) {
     $recentlyStar = ./GetRecentlyStar.ps1
     $nextStar = ./GetNextFromArray -Array $starOrder -Item $recentlyStar
     if ($nextStar -ne "Unknown") {
-        $text = $text + " [" + $nextStar + "降临]"
+        $text = $text -replace '\[Star\]', $nextStar
     }
 }
 return $text.TrimStart()

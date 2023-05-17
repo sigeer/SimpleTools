@@ -14,7 +14,9 @@ Write-Host "[Target]: $Count"
 $NowCount = 0
 $SuccessCount = 0
 while ($true) {
-    if ($SuccessCount -lt $Count) {
+    $nowSecondStarCount = ./GetStarCountRank
+    Write-Host "当前第二名"$nowSecondStarCount"颗星星"
+    if ($SuccessCount -lt $Count -and $SuccessCount -le $nowSecondStarCount) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
