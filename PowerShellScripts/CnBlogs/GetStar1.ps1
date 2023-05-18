@@ -5,7 +5,6 @@ param (
     [string]$Content = $null,
     [string]$Tag = $null,
     [string]$Suffix = $null,
-    [bool]$ShowStar = $false,
     [int]$LessThan = -1
 )
 
@@ -20,7 +19,9 @@ while ($true) {
         Write-Host "当前第二名"$nowSecondStarCount"颗星星"
 
         if ($SuccessCount -ge $nowSecondStarCount) {
-            WaitRandom
+            $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
+            Write-Host "下一次将在$((Get-Date).AddSeconds($WaitSeconds) | Get-Date -Format "HH:mm:ss")"
+            Start-Sleep -Seconds $WaitSeconds
             continue
         }
     }
@@ -29,7 +30,7 @@ while ($true) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
-        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix -ShowStar $ShowStar
+        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix
         $PostContent = $PostContent -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
@@ -58,10 +59,6 @@ while ($true) {
         Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     }
 
-    WaitRandom
-}
-
-function WaitRandom {
     $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
     Write-Host "下一次将在$((Get-Date).AddSeconds($WaitSeconds) | Get-Date -Format "HH:mm:ss")"
     Start-Sleep -Seconds $WaitSeconds
