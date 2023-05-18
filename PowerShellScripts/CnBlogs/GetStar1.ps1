@@ -5,7 +5,8 @@ param (
     [string]$Content = $null,
     [string]$Tag = $null,
     [string]$Suffix = $null,
-    [bool]$ShowStar = $false
+    [bool]$ShowStar = $false,
+    [int]$LessThan = -1
 )
 
 
@@ -14,9 +15,17 @@ Write-Host "[Target]: $Count"
 $NowCount = 0
 $SuccessCount = 0
 while ($true) {
-    $nowSecondStarCount = ./GetStarCountRank
-    Write-Host "当前第二名"$nowSecondStarCount"颗星星"
-    if ($SuccessCount -lt $Count -and $SuccessCount -le $nowSecondStarCount) {
+    if ($LessThan -le -1) {
+        $nowSecondStarCount = ./GetStarCountRank -Rank $LessThan
+        Write-Host "当前第二名"$nowSecondStarCount"颗星星"
+
+        if ($SuccessCount -ge $nowSecondStarCount) {
+            WaitRandom
+            continue
+        }
+    }
+
+    if ($SuccessCount -lt $Count) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
@@ -49,6 +58,10 @@ while ($true) {
         Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
     }
 
+    WaitRandom
+}
+
+function WaitRandom {
     $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
     Write-Host "下一次将在$((Get-Date).AddSeconds($WaitSeconds) | Get-Date -Format "HH:mm:ss")"
     Start-Sleep -Seconds $WaitSeconds

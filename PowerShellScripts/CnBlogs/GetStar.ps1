@@ -2,8 +2,7 @@
     [int]$Count = 1,
     [string]$Content = $null,
     [bool]$SkipDel = $false,
-    [string]$Tag = $null,
-    [string]$Mode = "Normal"
+    [string]$Tag = $null
 )
 
 if ([string]::IsNullOrEmpty($Content)) {
@@ -41,19 +40,16 @@ $NowCount = $InitNowCount
 $SuccessCount = $InitSuccessCount
 $ToDay = (Get-Date).Day
 while ($true) {
-    if ($Mode -eq "Auto") {
-        if (((Get-Date).Hour -le 8) -or ((Get-Date).Hour -gt 18)) {
-            Write-Host "下班时间降低频率。"
-            Start-Sleep -Seconds 3600
-            continue
-        }
-        if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
-            Write-Host "周末降低频率。"
-            Start-Sleep -Seconds 3600
-            continue
-        }
+    if (((Get-Date).Hour -le 8) -or ((Get-Date).Hour -gt 18)) {
+        Write-Host "下班时间降低频率。"
+        Start-Sleep -Seconds 3600
+        continue
     }
-
+    if (((Get-Date).DayOfWeek -eq 6) -or ((Get-Date).DayOfWeek -eq 0)) {
+        Write-Host "周末降低频率。"
+        Start-Sleep -Seconds 3600
+        continue
+    }
     
     if ($ToDay -ne (Get-Date).Day) {
         $NowCount = 0
