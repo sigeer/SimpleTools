@@ -1,11 +1,11 @@
 ﻿# 简化版
 
 param (
-    [int]$Count = 1,
+    [int]$Count = 10,
     [string]$Content = $null,
     [string]$Tag = $null,
     [string]$Suffix = $null,
-    [int]$LessThan = -1
+    [int]$LessThan = 0
 )
 
 
@@ -14,9 +14,9 @@ Write-Host "[Target]: $Count"
 $NowCount = 0
 $SuccessCount = 0
 while ($true) {
-    if ($LessThan -le -1) {
+    if ($LessThan -le 0) {
         $nowSecondStarCount = ./GetStarCountRank -Rank $LessThan
-        Write-Host "当前第二名"$nowSecondStarCount"颗星星"
+        Write-Host "当前第"$LessThan"名有"$nowSecondStarCount"颗星星"
 
         if ($SuccessCount -ge $nowSecondStarCount) {
             $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
@@ -57,6 +57,9 @@ while ($true) {
         }
         $Rate = "$([Math]::Round($SuccessCount/$NowCount, 4) * 100)%"
         Write-Host "当前已尝试${NowCount}次，出现${SuccessCount}次，出现率${Rate}" -ForegroundColor Green
+    } else {
+        Write-Error '任务完成'
+        break
     }
 
     $WaitSeconds = Get-Random -Minimum 300 -Maximum 550

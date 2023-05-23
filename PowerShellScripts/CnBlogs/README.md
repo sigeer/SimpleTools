@@ -13,13 +13,14 @@ CheckStar.ps1 [Result: 0 = ok, -ne 0 = fail]
 #获取最近出的星星，第一页没有则unknown
 GetRecentlyStar.ps1 
 
-GetStar1 -Count [default: 1, 数量] 
+GetStar1 -Count [default: 10, 数量] 
          -Tag [string, 标签] 
          -Content [string, default: 读取Wording.txt随机行] 
          -Suffix [string, 通过RLO字符，将内容移到末尾] 
-         -LessThan[default: -1, 控制星星小于等于排名榜第n名，-1时不启用]
-         # 关键词[Star]：当前将触发的星星 [SuccessCount]：已获取的星星数（包括当前发送的这条） [NowCount]：累计发送了多少条 [Rate]：触发几率
-
-./GetStar.ps1 -Content（文本） -Count （刷多少颗星，默认10） -SkipDel （true => 没有星的闪存将不会被删除， 默认false）
-./GetStar.ps1
+         -LessThan[default: 0, 控制星星小于等于排名榜第n名，0时不启用]
+         # 关键词
+         #[Star]：当前将触发的星星 
+         #[SuccessCount]：已获取的星星数（包括当前发送的这条） 
+         #[NowCount]：累计发送了多少条 
+         #[Rate]：触发几率
 ```
