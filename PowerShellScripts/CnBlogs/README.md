@@ -18,6 +18,7 @@ GetStar1 -Count [default: 10, 数量]
          -Content [string, default: 读取Wording.txt随机行] 
          -Suffix [string, 通过RLO字符，将内容移到末尾] 
          -LessThan[default: 0, 控制星星小于等于排名榜第n名，0时不启用]
+         -From[default: 0,已经获取了n颗，计数中断后使用]
          # 关键词
          #[Star]：当前将触发的星星 
          #[SuccessCount]：已获取的星星数（包括当前发送的这条） 
