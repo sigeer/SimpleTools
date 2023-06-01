@@ -3,7 +3,6 @@
 param (
     [int]$Count = -1,
     [string]$Content = $null,
-    [string]$Tag = $null,
     [string]$Suffix = $null,
     [string]$Pool = "./wording_default.txt",
     [int]$LessThan = 0
@@ -46,7 +45,7 @@ while ($true) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
-        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix -Pool $Pool
+        $PostContent = ./GetPostContent.ps1 -Content $Content -Suffix $Suffix -Pool $Pool
         $PostContent = $PostContent -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
