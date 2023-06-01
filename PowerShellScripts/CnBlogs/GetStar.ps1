@@ -5,16 +5,24 @@ param (
     [string]$Content = $null,
     [string]$Tag = $null,
     [string]$Suffix = $null,
-    [int]$LessThan = 0,
-    [int]$From = 0
+    [string]$Pool = "./wording_default.txt",
+    [int]$LessThan = 0
 )
 
+$CachePath = './success_cache'
 
 Write-Host "=======Begin======="
 Write-Host "[Target]: $Count"
-$NowCount = 0 + $From
-$SuccessCount = 0 + $From
+$NowCount = 0
+$SuccessCount = 0
 $ToDay = (Get-Date).Day
+if (Test-Path $CachePath) {
+    $CacheStr = Get-Content -Path $CachePath
+    if ($ToDay -eq [int]::Parse($CacheStr.Split("|")[0])) {
+        $SuccessCount = [int]::Parse($CacheStr.Split("|")[1])
+    }
+}
+
 while ($true) {
     if ($ToDay -ne (Get-Date).Day) {
         $NowCount = 0
@@ -26,7 +34,7 @@ while ($true) {
         $nowSecondStarCount = ./GetStarCountRank -Rank $LessThan
         Write-Host "当前第"$LessThan"名有"$nowSecondStarCount"颗星星"
 
-        if ($SuccessCount + 1 -ge $nowSecondStarCount) {
+        if (($SuccessCount + 1) -ge $nowSecondStarCount) {
             $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
             Write-Host "下一次将在$((Get-Date).AddSeconds($WaitSeconds) | Get-Date -Format "HH:mm:ss")"
             Start-Sleep -Seconds $WaitSeconds
@@ -38,7 +46,7 @@ while ($true) {
         $NowCount++
         $IfRate = "$([Math]::Round($($SuccessCount + 1)/$NowCount, 4) * 100)%"
 
-        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix
+        $PostContent = ./GetPostContent.ps1 -Content $Content -Tag $Tag -Suffix $Suffix -Pool $Pool
         $PostContent = $PostContent -replace '\[SuccessCount\]', ($SuccessCount + 1)
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
@@ -53,6 +61,7 @@ while ($true) {
                 }
                 elseif ($Id -eq 0) {
                     $SuccessCount++ 
+                    Set-Content -Path './success_cache' -Value $ToDay"|"$SuccessCount
                 }
                 else {
                     ./DelIng.ps1 -Id $Id
