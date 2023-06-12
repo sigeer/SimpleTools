@@ -14,19 +14,19 @@ Write-Host "=======Begin======="
 Write-Host "[Target]: $Count"
 $NowCount = 0
 $SuccessCount = 0
-$ToDay = (Get-Date).Day
+$ToDay = (Get-Date).ToString("yyyyMMdd")
 if (Test-Path $CachePath) {
     $CacheStr = Get-Content -Path $CachePath
-    if ($ToDay -eq [int]::Parse($CacheStr.Split("|")[0])) {
-        $SuccessCount = [int]::Parse($CacheStr.Split("|")[1])
+    if ($ToDay -eq (Get-Item $CachePath).LastWriteTime.ToString("yyyyMMdd")) {
+        $SuccessCount = [int]::Parse($CacheStr)
     }
 }
 
 while ($true) {
-    if ($ToDay -ne (Get-Date).Day) {
+    if ($ToDay -ne (Get-Date).ToString("yyyyMMdd")) {
         $NowCount = 0
         $SuccessCount = 0
-        $ToDay = (Get-Date).Day
+        $ToDay = (Get-Date).ToString("yyyyMMdd")
     }
 
     if ($LessThan -gt 0) {
@@ -60,7 +60,7 @@ while ($true) {
                 }
                 elseif ($Id -eq 0) {
                     $SuccessCount++ 
-                    Set-Content -Path './success_cache' -Value $ToDay"|"$SuccessCount
+                    Set-Content -Path './success_cache' -Value $SuccessCount
                 }
                 else {
                     ./DelIng.ps1 -Id $Id
