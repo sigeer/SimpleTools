@@ -17,12 +17,13 @@ if (![string]::IsNullOrEmpty($Suffix)) {
     $tmpSufix = ./RLOWordingCore.ps1 -Content $Suffix
     $text = $text + " " + $tmpSufix + " "
 } else {
-    $matchSufixReg = '(((?!\[\-).|\n)*)(\[\-([^\]]*)\])(.*)'
+    $matchSufixReg = '(\[\-([^\]]*)\])'
     $matchResult = [regex]::Match($text, $matchSufixReg)
     if ($matchResult.Success) {
-        $Suffix = $text -replace $matchSufixReg, $matchResult.Groups[4].Value
+        $Suffix = $matchResult.Groups[2].Value
         $tmpSufix = ./RLOWordingCore.ps1 -Content $Suffix
-        $text = $matchResult.Groups[4].Value + $matchResult.Groups[5].Value + " " + $tmpSufix + " "
+        $text = $text -replace $matchSufixReg, ''
+        $text = $text + " " + $tmpSufix + " "
     }
 }
 if ($text.Contains("[Star]")) {
