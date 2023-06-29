@@ -50,6 +50,7 @@ while ($true) {
         $PostContent = $PostContent -replace '\[NowCount\]', $NowCount
         $PostContent = $PostContent -replace '\[Rate\]', $IfRate
 
+        Write-Host $PostContent
         $PostResult = ./PostIng.ps1 -Content $PostContent
         if ($PostResult) {
             if (!$SkipDel) {

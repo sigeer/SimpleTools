@@ -16,6 +16,14 @@ if ([string]::IsNullOrEmpty($Content)) {
 if (![string]::IsNullOrEmpty($Suffix)) {
     $tmpSufix = ./RLOWordingCore.ps1 -Content $Suffix
     $text = $text + " " + $tmpSufix + " "
+} else {
+    $matchSufixReg = '\[\-([^\]]*)\]'
+    $matchResult = [regex]::Match($text, $matchSufixReg)
+    if ($matchResult.Success) {
+        $Suffix = $text -replace $matchSufixReg, $matchResult.Groups[1].Value
+        $tmpSufix = ./RLOWordingCore.ps1 -Content $Suffix
+        $text = $text + " " + $tmpSufix + " "
+    }
 }
 if ($text.Contains("[Star]")) {
     $recentlyStar = ./GetRecentlyStar.ps1
