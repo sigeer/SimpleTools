@@ -23,4 +23,5 @@ GetStar -Count [default: -1, 无限制]
         #[SuccessCount]：已获取的星星数（包括当前发送的这条） 
         #[NowCount]：累计发送了多少条 
         #[Rate]：触发几率
+        #[-XXX]: XXX将被移到末尾（-Suffix优先）
 ```
