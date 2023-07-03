@@ -5,7 +5,8 @@ param (
     [string]$Content = $null,
     [string]$Suffix = $null,
     [string]$Pool = "./wording_default.txt",
-    [int]$LessThan = 0
+    [int]$LessThan = 0,
+    [int]$MoreThan = 0
 )
 
 $CachePath = './success_cache'
@@ -30,14 +31,26 @@ while ($true) {
     }
 
     if ($LessThan -gt 0) {
-        $nowSecondStarCount = ./GetStarCountRank -Rank $LessThan
-        Write-Host "当前第"$LessThan"名有"$nowSecondStarCount"颗星星"
+        $nowSelectStarCount = ./GetStarCountRank -Rank $LessThan
+        Write-Host "当前第"$LessThan"名有"$nowSelectStarCount"颗星星"
 
-        if (($SuccessCount + 1) -ge $nowSecondStarCount) {
+        if (($SuccessCount + 1) -ge $nowSelectStarCount) {
             $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
             Write-Host "下一次将在$((Get-Date).AddSeconds($WaitSeconds) | Get-Date -Format "HH:mm:ss")"
             Start-Sleep -Seconds $WaitSeconds
             continue
+        }
+    } else {
+        if ($MoreThan -gt 0) {
+            $nowSelectStarCount = ./GetStarCountRank -Rank $MoreThan
+            Write-Host "当前第"$MoreThan"名有"$nowSelectStarCount"颗星星"
+    
+            if (($SuccessCount + 1) -gt $nowSelectStarCount) {
+                $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
+                Write-Host "下一次将在$((Get-Date).AddSeconds($WaitSeconds) | Get-Date -Format "HH:mm:ss")"
+                Start-Sleep -Seconds $WaitSeconds
+                continue
+            }
         }
     }
 
