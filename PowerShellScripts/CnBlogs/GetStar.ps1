@@ -92,7 +92,7 @@ while ($true) {
         break
     }
 
-    $WaitSeconds = Get-Random -Minimum 300 -Maximum 550
+    $WaitSeconds = Get-Random -Minimum 300 -Maximum 400
     Write-Host "下一次将在$((Get-Date).AddSeconds($WaitSeconds) | Get-Date -Format "HH:mm:ss")"
     Start-Sleep -Seconds $WaitSeconds
 }
