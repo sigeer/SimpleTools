@@ -33,7 +33,7 @@
 
 <script setup>
 import { reactive, ref, onMounted, watch, nextTick, computed } from "vue";
-import EInput from "./EInput.vue";
+import EInput from "./input/EInput.vue";
 
 const elRef = ref(null);
 onMounted(() => {
