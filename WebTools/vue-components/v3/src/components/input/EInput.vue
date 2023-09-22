@@ -64,13 +64,14 @@ watch(
   () => props.modelValue,
   () => {
     if (model.value !== props.modelValue) model.value = props.modelValue;
-  }
+  },
+  { immediate: true }
 );
 const emits = defineEmits(["update:modelValue", "blur", "focus"]);
-watch(model, () => {
+watch(() => model.value, () => {
   emits("update:modelValue", model.value);
   displayText.value = props.format ? props.format(model.value) : model.value;
-});
+}, { immediate: true });
 
 const handleFocus = (evt) => {
   emits("focus", evt);
