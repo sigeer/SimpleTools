@@ -94,7 +94,7 @@
 
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
-import EInput from "./EInput.vue";
+import EInput from "./input/EInput.vue";
 
 const elRef = ref(0);
 const props = defineProps({
