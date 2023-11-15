@@ -49,7 +49,7 @@ watch(
   }
 );
 
-const reset = () => {
+const reset = (evt) => {
   if (isWaiting.value) {
     evt.stopPropagation();
     return;
