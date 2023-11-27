@@ -13,6 +13,7 @@ import TextContentAsync from "./components/TextContentAsync.vue";
 import EmailAutoComplete from "./components/EmailAutoComplete.vue";
 import ImageFullScreen from "./components/ImageFullScreen.vue";
 import InputSamples from "./samples/EInputSample.vue";
+import ETableSample from "./samples/ETableSample.vue";
 
 import Draggable from "./directives/Draggable/Draggable";
 import Loading from "./directives/Loading/Loading";
@@ -352,6 +353,12 @@ const showImgMultiply = () => {
         ImageFullScreen: <button @click="showImgSingle">showImgSingle</button>
         <button @click="showImgMultiply">showImgMultiply</button>
         <image-full-screen ref="imgRef"></image-full-screen>
+      </div>
+
+      <hr />
+      <div>
+        Table
+        <ETableSample></ETableSample>
       </div>
     </div>
   </div>
