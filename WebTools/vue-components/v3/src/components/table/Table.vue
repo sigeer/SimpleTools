@@ -1,55 +1,57 @@
 <template>
-  <div
-    :class="{
-      'e-table-container': true,
-      '--border': bordered,
-      '--scroll': !!containerScrollStyle,
-    }"
-    :style="containerScrollStyle"
-  >
-    <div class="e-table-header">
-      <div class="e-table-header-row">
-        <div
-          :class="'e-table-header-cell text-' + (x.align ?? defaultAlign)"
-          v-for="x in columns"
-          :style="
-            x.width
-              ? `width: ${formatStyle(x.width)}; flex: 0 0 ${formatStyle(
-                  x.width
-                )}`
-              : ''
-          "
-        >
-          <slot name="headerCell" :column="x">
-            {{ x.title }}
-          </slot>
-        </div>
-      </div>
-    </div>
-    <Loading :loading="loading">
-      <div class="e-table-body">
-        <div class="e-table-body-row" v-for="row in dataSource">
+  <div class="e-table-box">
+    <div
+      :class="{
+        'e-table-container': true,
+        '--border': bordered,
+        '--scroll': !!containerScrollStyle,
+      }"
+      :style="containerScrollStyle"
+    >
+      <div class="e-table-header">
+        <div class="e-table-header-row">
           <div
-            :class="`e-table-body-cell ${col.ellipsis ? '--ellipsis ' : ''}${
-              col.scroll ? '--scroll ' : ''
-            }text-${col.align ?? defaultAlign}`"
-            :title="col.ellipsis ? row[col.dataPropName]: null"
-            v-for="col in columns"
+            :class="'e-table-header-cell text-' + (x.align ?? defaultAlign)"
+            v-for="x in columns"
             :style="
-              col.width
-                ? `width: ${formatStyle(col.width)}; flex: 0 0 ${formatStyle(
-                    col.width
+              x.width
+                ? `width: ${formatStyle(x.width)}; flex: 0 0 ${formatStyle(
+                    x.width
                   )}`
                 : ''
             "
           >
-            <slot name="bodyCell" :column="col" :row="row">
-              {{ row[col.dataPropName] }}
+            <slot name="headerCell" :column="x">
+              {{ x.title }}
             </slot>
           </div>
         </div>
       </div>
-    </Loading>
+      <Loading :loading="loading">
+        <div class="e-table-body">
+          <div class="e-table-body-row" v-for="row in dataSource">
+            <div
+              :class="`e-table-body-cell ${col.ellipsis ? '--ellipsis ' : ''}${
+                col.scroll ? '--scroll ' : ''
+              }text-${col.align ?? defaultAlign}`"
+              :title="col.ellipsis ? row[col.dataPropName] : null"
+              v-for="col in columns"
+              :style="
+                col.width
+                  ? `width: ${formatStyle(col.width)}; flex: 0 0 ${formatStyle(
+                      col.width
+                    )}`
+                  : ''
+              "
+            >
+              <slot name="bodyCell" :column="col" :row="row">
+                {{ row[col.dataPropName] }}
+              </slot>
+            </div>
+          </div>
+        </div>
+      </Loading>
+    </div>
   </div>
 </template>
 
@@ -106,6 +108,10 @@ const formatStyle = (val) => {
 </script>
 
 <style lang="less" scoped>
+.e-table-box {
+  width: 100%;
+  overflow: hidden;
+}
 .e-table-container {
   &.--scroll {
     overflow: auto;
@@ -137,7 +143,7 @@ const formatStyle = (val) => {
     .e-table-header-cell {
       flex: 1;
       background-color: #e3e3e3;
-      padding: 4px 0;
+      padding: 4px;
       border-top: 1px solid #ddd;
       border-bottom: 1px solid #c5c5c5;
     }
@@ -154,6 +160,7 @@ const formatStyle = (val) => {
       &.--ellipsis {
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       &.--scroll {
