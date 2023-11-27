@@ -30,7 +30,10 @@
       <div class="e-table-body">
         <div class="e-table-body-row" v-for="row in dataSource">
           <div
-            :class="'e-table-body-cell text-' + (col.align ?? defaultAlign)"
+            :class="`e-table-body-cell ${col.ellipsis ? '--ellipsis ' : ''}${
+              col.scroll ? '--scroll ' : ''
+            }text-${col.align ?? defaultAlign}`"
+            :title="col.ellipsis ? row[col.dataPropName]: null"
             v-for="col in columns"
             :style="
               col.width
@@ -145,8 +148,17 @@ const formatStyle = (val) => {
     .e-table-body-cell {
       flex: 1;
       background-color: #fcfcfc;
-      padding: 4px 0;
+      padding: 4px;
       border-bottom: 1px solid #ddd;
+
+      &.--ellipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &.--scroll {
+        overflow: auto;
+      }
     }
 
     &:hover .e-table-body-cell {
