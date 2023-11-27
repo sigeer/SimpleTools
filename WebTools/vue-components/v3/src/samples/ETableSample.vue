@@ -36,7 +36,7 @@ const toggleLoading = () => {
 const paginationModel = ref({
   pageIndex: 1,
   pageSize: 10,
-  total: 1,
+  total: 3,
   change: (evt) => {
     console.log(evt);
   }
