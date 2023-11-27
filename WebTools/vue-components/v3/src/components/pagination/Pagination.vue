@@ -1,5 +1,10 @@
 <template>
   <div class="pagination-container">
+    <div class="pagination-info">
+      当前第{{ localModel.pageIndex }}页，每页{{
+        localModel.pageSize
+      }}条数据，共有{{ localModel.total }}条数据
+    </div>
     <button
       class="pagination-control-previous"
       @click="previous"
@@ -10,7 +15,7 @@
     <input
       type="number"
       class="pagination-edit"
-      v-model="localModel.pageIndex"
+      v-model="current"
       @keyup.enter="jump"
       @blur="jump"
     />
@@ -33,6 +38,7 @@ const props = defineProps({
 });
 
 const localModel = ref({ pageIndex: 0, pageSize: 0, total: 0 });
+const current = ref(1);
 
 watch(
   () => props.modelValue,
@@ -44,6 +50,7 @@ watch(
       localModel.value.pageIndex = props.modelValue.pageIndex;
       localModel.value.pageSize = props.modelValue.pageSize;
       localModel.value.total = props.modelValue.total;
+      current.value = props.modelValue.pageIndex;
     }
   },
   {
@@ -58,7 +65,7 @@ const totalPageSize = computed(() => {
 
 const dataEmits = defineEmits(["update:modelValue"]);
 const canNext = computed(() => {
-  return localModel.value.pageIndex < localModel.value.total;
+  return localModel.value.pageIndex < totalPageSize.value;
 });
 const next = () => {
   if (unref(canNext)) {
@@ -77,12 +84,14 @@ const previous = () => {
     dataEmits("update:modelValue", localModel.value);
   }
 };
-const backUp = ref(1);
+
 const jump = () => {
-  if (!localModel.value.pageIndex) localModel.value.pageIndex = 1;
-  if (localModel.value.pageIndex > localModel.value.total)
-    localModel.value.pageIndex = localModel.value.total;
-    props.modelValue.change && props.modelValue.change(localModel.value);
+  if (!current.value) current.value = 1;
+  current.value = +current.value.toFixed(0);
+  if (!current.value) current.value = 1;
+  if (current.value > totalPageSize.value) current.value = totalPageSize.value;
+  localModel.value.pageIndex = current.value;
+  props.modelValue.change && props.modelValue.change(localModel.value);
   dataEmits("update:modelValue", localModel.value);
 };
 </script>
@@ -102,12 +111,17 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-
+@backgroundColor: #f3f3f3;
 .pagination-container {
+  font-size: 0.75rem;
   display: flex;
   height: 28px;
   line-height: 28px;
-  background-color: #f3f3f3;
+  background-color: @backgroundColor;
+}
+
+.pagination-info {
+  padding: 0 4px;
 }
 
 .pagination-edit {
@@ -118,7 +132,6 @@ input[type="number"] {
 }
 
 .pagination-span {
-  font-size: 0.75rem;
   padding: 0 6px;
 }
 
@@ -127,11 +140,13 @@ input[type="number"] {
   font-size: 0.75rem;
   padding: 6px 8px;
   border-radius: 0;
+  background-color: @backgroundColor;
 }
 
 .pagination-control-next {
   font-size: 0.75rem;
   padding: 6px 8px;
   border-radius: 0;
+  background-color: @backgroundColor;
 }
 </style>
