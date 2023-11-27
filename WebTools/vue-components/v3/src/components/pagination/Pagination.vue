@@ -1,7 +1,7 @@
 <template>
   <div class="pagination-container">
     <div class="pagination-info">
-      当前第{{ localModel.pageIndex }}页，每页{{
+      当前第{{ localModel.pageIndex }}页，每页最多{{
         localModel.pageSize
       }}条数据，共有{{ localModel.total }}条数据
     </div>
@@ -69,7 +69,8 @@ const canNext = computed(() => {
 });
 const next = () => {
   if (unref(canNext)) {
-    localModel.value.pageIndex++;
+    current.value++;
+    localModel.value.pageIndex = current.value;
     props.modelValue.change && props.modelValue.change(localModel.value);
     dataEmits("update:modelValue", localModel.value);
   }
@@ -79,7 +80,8 @@ const canPrevious = computed(() => {
 });
 const previous = () => {
   if (unref(canPrevious)) {
-    localModel.value.pageIndex--;
+    current.value--;
+    localModel.value.pageIndex = current.value;
     props.modelValue.change && props.modelValue.change(localModel.value);
     dataEmits("update:modelValue", localModel.value);
   }

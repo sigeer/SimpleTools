@@ -73,7 +73,7 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 const defaultAlign = ref("center");
@@ -111,37 +111,20 @@ const formatStyle = (val) => {
   &.--border {
     .e-table-header-row {
       .e-table-header-cell {
-        border: 1px solid #ddd;
-        flex: 1;
-
-        &:not(:last-child) {
-          border-right: 0;
+        border-left: 1px solid #ddd;
+        &:last-child {
+          border-right: 1px solid #ddd;
         }
       }
     }
 
     .e-table-body-row {
       .e-table-body-cell {
-        border: 1px solid #ddd;
-        flex: 1;
-        border-top: 0;
-
-        &:not(:last-child) {
-          border-right: 0;
+        border-left: 1px solid #ddd;
+        &:last-child {
+          border-right: 1px solid #ddd;
         }
       }
-    }
-  }
-
-  .e-table-body-row {
-    display: flex;
-    .e-table-body-cell {
-      background-color: #fcfcfc;
-      padding: 4px 0;
-    }
-
-    &:hover .e-table-body-cell {
-      background-color: #f0f0f0;
     }
   }
 
@@ -149,8 +132,25 @@ const formatStyle = (val) => {
     display: flex;
 
     .e-table-header-cell {
+      flex: 1;
       background-color: #e3e3e3;
       padding: 4px 0;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #c5c5c5;
+    }
+  }
+
+  .e-table-body-row {
+    display: flex;
+    .e-table-body-cell {
+      flex: 1;
+      background-color: #fcfcfc;
+      padding: 4px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    &:hover .e-table-body-cell {
+      background-color: #f0f0f0;
     }
   }
 }

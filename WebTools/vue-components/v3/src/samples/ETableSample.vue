@@ -1,6 +1,7 @@
 <template>
   <button @click="toggleLoading">数据加载</button>
-  <Table :columns="columns" :data-source="dataSource" :loading="dataLoading">
+  <button @click="toggleBorder">是否显示边框{{ bordered }}</button>
+  <Table :columns="columns" :data-source="dataSource" :loading="dataLoading" :bordered="bordered">
     <template #bodyCell="{ column }">
       <template v-if="column.dataPropName === 'action'">
         <a>操作</a>
@@ -33,10 +34,15 @@ const toggleLoading = () => {
   dataLoading.value = !dataLoading.value;
 };
 
+const bordered = ref(true);
+const toggleBorder = () => {
+  bordered.value = !bordered.value;
+}
+
 const paginationModel = ref({
   pageIndex: 1,
   pageSize: 10,
-  total: 1,
+  total: 3,
   change: (evt) => {
     console.log(evt);
   }
