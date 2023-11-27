@@ -37,8 +37,8 @@ const paginationModel = ref({
   pageIndex: 1,
   pageSize: 10,
   total: 1,
-  change: () => {
-    console.log("changed");
+  change: (evt) => {
+    console.log(evt);
   }
 })
 </script>
