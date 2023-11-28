@@ -7,7 +7,7 @@
     :data-source="tableDs"
     :loading="dataLoading"
     :bordered="bordered"
-    :scroll="{ height: 400}"
+    :scroll="{ height: 400 }"
   >
     <template #bodyCell="{ column }">
       <template v-if="column.dataPropName === 'action'">
@@ -35,6 +35,10 @@ const dataSource = ref([
   { t1: "222", t2: "aaa" },
 ]);
 const addData = () => {
+  dataLoading.value = true;
+  setTimeout(() => {
+    dataLoading.value = false;
+  }, 3000);
   for (let index = 0; index < 10; index++) {
     dataSource.value.push({ t1: index, t2: "t2_" + index });
   }
@@ -62,7 +66,10 @@ const paginationModel = ref({
   pageSize: 50,
   total: 3,
   change: (evt) => {
-    console.log(evt);
+    dataLoading.value = true;
+    setTimeout(() => {
+      dataLoading.value = false;
+    }, 3000);
   },
 });
 </script>
