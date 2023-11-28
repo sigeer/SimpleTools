@@ -10,7 +10,20 @@
       @click="previous"
       :disabled="!canPrevious"
     >
-      &lt;
+      <svg
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 19.5L8.25 12l7.5-7.5"
+        ></path>
+      </svg>
     </button>
     <input
       type="number"
@@ -18,10 +31,24 @@
       v-model="current"
       @keyup.enter="jump"
       @blur="jump"
+      title="回车跳转目标页"
     />
     <span class="pagination-span">/ {{ totalPageSize }}</span>
     <button class="pagination-control-next" :disabled="!canNext" @click="next">
+      <svg
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
       >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8.25 4.5l7.5 7.5-7.5 7.5"
+        ></path>
+      </svg>
     </button>
   </div>
 </template>
@@ -117,8 +144,8 @@ input[type="number"] {
 .pagination-container {
   font-size: 0.75rem;
   display: flex;
-  height: 28px;
-  line-height: 28px;
+  height: 32px;
+  line-height: 32px;
   background-color: @backgroundColor;
 }
 
@@ -130,7 +157,8 @@ input[type="number"] {
   min-width: 24px;
   max-width: 48px;
   border: none;
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid #787878;
+  background-color: @backgroundColor;
 }
 
 .pagination-span {
@@ -139,16 +167,27 @@ input[type="number"] {
 
 .pagination-control-previous {
   margin-left: auto;
-  font-size: 0.75rem;
-  padding: 6px 8px;
-  border-radius: 0;
-  background-color: @backgroundColor;
 }
 
+.pagination-control-previous,
 .pagination-control-next {
   font-size: 0.75rem;
-  padding: 6px 8px;
-  border-radius: 0;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 25px;
   background-color: @backgroundColor;
+  width: 32px;
+
+  &:hover,
+  &:active {
+    &:not(.disabled, [disabled]) {
+      background-color: #e1e1e1;
+    }
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 </style>
