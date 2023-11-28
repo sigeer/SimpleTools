@@ -1,7 +1,12 @@
 <template>
   <button @click="toggleLoading">数据加载</button>
   <button @click="toggleBorder">是否显示边框{{ bordered }}</button>
-  <Table :columns="columns" :data-source="dataSource" :loading="dataLoading" :bordered="bordered">
+  <Table
+    :columns="columns"
+    :data-source="dataSource"
+    :loading="dataLoading"
+    :bordered="bordered"
+  >
     <template #bodyCell="{ column }">
       <template v-if="column.dataPropName === 'action'">
         <a>操作</a>
@@ -16,15 +21,14 @@ import { ref } from "vue";
 import Table from "../components/table";
 import Pagination from "../components/pagination";
 
-
 const columns = ref([
-  { title: "测试列", dataPropName: "t1", width: 250 },
+  { title: "测试列", dataPropName: "t1", width: 250, scroll: true },
   { title: "测试列", dataPropName: "t2" },
   { title: "操作", dataPropName: "action", width: 80 },
 ]);
 
 const dataSource = ref([
-  { t1: "111", t2: "aaa" },
+  { t2: "111", t1: "aaabbbcccdddeeefffggghhhjjjkkk" },
   { t1: "222", t2: "aaa" },
   { t1: "222", t2: "aaa" },
 ]);
@@ -37,7 +41,7 @@ const toggleLoading = () => {
 const bordered = ref(true);
 const toggleBorder = () => {
   bordered.value = !bordered.value;
-}
+};
 
 const paginationModel = ref({
   pageIndex: 1,
@@ -45,6 +49,6 @@ const paginationModel = ref({
   total: 3,
   change: (evt) => {
     console.log(evt);
-  }
-})
+  },
+});
 </script>
