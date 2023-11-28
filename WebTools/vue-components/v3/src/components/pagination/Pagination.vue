@@ -72,11 +72,13 @@ watch(
   () => {
     if (
       props.modelValue.pageIndex !== localModel.value.pageIndex ||
-      props.modelValue.pageSize !== localModel.value.pageSize
+      props.modelValue.pageSize !== localModel.value.pageSize ||
+      props.modelValue.total !== localModel.value.total
     ) {
       localModel.value.pageIndex = props.modelValue.pageIndex;
       localModel.value.pageSize = props.modelValue.pageSize;
       localModel.value.total = props.modelValue.total;
+      localModel.value.change = props.modelValue.change;
       current.value = props.modelValue.pageIndex;
     }
   },
@@ -119,9 +121,11 @@ const jump = () => {
   current.value = +current.value.toFixed(0);
   if (!current.value) current.value = 1;
   if (current.value > totalPageSize.value) current.value = totalPageSize.value;
-  localModel.value.pageIndex = current.value;
-  props.modelValue.change && props.modelValue.change(localModel.value);
-  dataEmits("update:modelValue", localModel.value);
+  if (localModel.value.pageIndex !== current.value) {
+    localModel.value.pageIndex = current.value;
+    props.modelValue.change && props.modelValue.change(localModel.value);
+    dataEmits("update:modelValue", localModel.value);
+  }
 };
 </script>
 
@@ -177,6 +181,7 @@ input[type="number"] {
   border-radius: 25px;
   background-color: @backgroundColor;
   width: 32px;
+  transition: all 0.4s;
 
   &:hover,
   &:active {
