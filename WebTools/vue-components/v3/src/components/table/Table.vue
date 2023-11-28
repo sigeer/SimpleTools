@@ -28,7 +28,7 @@
         </div>
       </div>
       <Loading :loading="loading">
-        <div class="e-table-body">
+        <div :class="{ 'e-table-body': true }">
           <div class="e-table-body-row" v-for="row in dataSource">
             <div
               :class="`e-table-body-cell ${col.ellipsis ? '--ellipsis ' : ''}${
@@ -57,7 +57,7 @@
 
 <script setup>
 import Loading from "../loading";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   columns: {
@@ -87,10 +87,10 @@ const containerScrollStyle = computed(() => {
   let obj = {};
   if (props.scroll) {
     if (props.scroll.width) {
-      obj.width = formatStyle(props.scroll.width);
+      obj.maxWidth = formatStyle(props.scroll.width);
     }
     if (props.scroll.height) {
-      obj.height = formatStyle(props.scroll.height);
+      obj.maxHeight = formatStyle(props.scroll.height);
     }
     return obj;
   }
@@ -105,6 +105,25 @@ const formatStyle = (val) => {
   }
   return null;
 };
+
+onMounted(() => {
+  if (props.scroll?.height) {
+    watch(
+      () => props.dataSource,
+      () => {
+        scorllMoveTop();
+      },
+      { deep: true }
+    );
+  }
+});
+
+const scorllMoveTop = () => {
+  document
+    .querySelector(".e-table-body")
+    ?.scrollIntoView({ behavior: "smooth" });
+};
+defineExpose({ scorllMoveTop });
 </script>
 
 <style lang="less" scoped>
@@ -113,10 +132,6 @@ const formatStyle = (val) => {
   overflow: hidden;
 }
 .e-table-container {
-  &.--scroll {
-    overflow: auto;
-  }
-
   &.--border {
     .e-table-header-row {
       .e-table-header-cell {
@@ -137,16 +152,37 @@ const formatStyle = (val) => {
     }
   }
 
-  .e-table-header-row {
-    display: flex;
+  &.--scroll {
+    overflow: auto;
+    position: relative;
 
-    .e-table-header-cell {
-      flex: 1;
-      background-color: #e3e3e3;
-      padding: 4px;
-      border-top: 1px solid #ddd;
-      border-bottom: 1px solid #c5c5c5;
+    .e-table-header {
+      position: sticky;
+      z-index: 1;
+      top: 0;
     }
+  }
+
+  .e-table-header {
+    .e-table-header-row {
+      display: flex;
+
+      .e-table-header-cell {
+        flex: 1;
+        background-color: #e3e3e3;
+        padding: 4px;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #c5c5c5;
+
+        &.header-col-scrollbar {
+          width: 8px;
+          flex: 0 0 8px;
+        }
+      }
+    }
+  }
+
+  .e-table-body {
   }
 
   .e-table-body-row {
