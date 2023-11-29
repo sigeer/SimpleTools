@@ -4,7 +4,7 @@
       <NotificationItem
         v-for="x in dataSource"
         :value="x"
-        :allow-html="allowHtml"
+        :icon="icon"
         @delete="handleDelete(x)"
       ></NotificationItem>
     </div>
@@ -12,15 +12,8 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from "vue";
+import { ref } from "vue";
 import NotificationItem from "./NotificationItem.vue";
-
-defineProps({
-  allowHtml: {
-    type: Boolean,
-    default: false,
-  },
-});
 
 const dataSource = ref([]);
 const push = (item) => {

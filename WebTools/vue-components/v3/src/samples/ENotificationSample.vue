@@ -10,7 +10,8 @@ const show = () => {
     notification.show({
         title: '这是title',
         description: '这是description',
-        time: -1
+        time: -1,
+        icon: 'warning'
     })
 }
 </script>
