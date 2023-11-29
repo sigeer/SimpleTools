@@ -155,6 +155,7 @@ input[type="number"] {
 
 .pagination-info {
   padding: 0 4px;
+  margin-left: auto;
 }
 
 .pagination-edit {
@@ -167,10 +168,6 @@ input[type="number"] {
 
 .pagination-span {
   padding: 0 6px;
-}
-
-.pagination-control-previous {
-  margin-left: auto;
 }
 
 .pagination-control-previous,
