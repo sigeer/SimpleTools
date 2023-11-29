@@ -4,7 +4,6 @@
       <NotificationItem
         v-for="x in dataSource"
         :value="x"
-        :icon="icon"
         @delete="handleDelete(x)"
       ></NotificationItem>
     </div>
