@@ -9,6 +9,11 @@
     :bordered="bordered"
     :scroll="{ height: 400 }"
   >
+  <template #headerCell="{ column }">
+    <template v-if="column.dataPropName === 'action'">
+      <a>header</a>
+    </template>
+  </template>
     <template #bodyCell="{ column }">
       <template v-if="column.dataPropName === 'action'">
         <a>操作</a>
@@ -35,12 +40,12 @@ const dataSource = ref([
   { t1: "222", t2: "aaa" },
 ]);
 const addData = () => {
-  dataLoading.value = true;
-  setTimeout(() => {
-    dataLoading.value = false;
-  }, 3000);
+  // dataLoading.value = true;
+  // setTimeout(() => {
+  //   dataLoading.value = false;
+  // }, 3000);
   for (let index = 0; index < 10; index++) {
-    dataSource.value.push({ t1: index, t2: "t2_" + index });
+    dataSource.value.push({ t1: dataSource.value.length, t2: "t2_" + dataSource.value.length });
   }
   paginationModel.value.total = dataSource.value.length;
 };
@@ -66,10 +71,7 @@ const paginationModel = ref({
   pageSize: 50,
   total: 3,
   change: (evt) => {
-    dataLoading.value = true;
-    setTimeout(() => {
-      dataLoading.value = false;
-    }, 3000);
+
   },
 });
 </script>
