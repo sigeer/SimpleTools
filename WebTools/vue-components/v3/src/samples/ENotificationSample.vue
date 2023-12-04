@@ -1,16 +1,28 @@
 <template>
-    <button @click="show">notfication</button>
+    <button @click="show('error')">error</button>
+    <button @click="show('info')">info</button>
+    <button @click="show('warning')">warning</button>
+
+    <button @click="showHtml()">warning</button>
 </template>
 
 <script setup>
 import useNotification from '../components/notification/useNotification';
 const notification = useNotification();
 
-const show = () => {
+const show = (type) => {
     notification.show({
         title: '这是title',
         description: '这是description',
-        time: -1
+        icon: type
+    })
+}
+
+const showHtml = (type) => {
+    notification.show({
+        title: '这是title',
+        htmlContent: '<button>123</button>',
+        icon: type
     })
 }
 </script>
