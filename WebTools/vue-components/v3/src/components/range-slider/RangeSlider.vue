@@ -32,14 +32,14 @@ onMounted(() => {
 
   const startDrag1 = () => {
     isDragging1 = true;
-    coreRef1.value.classList.add('active');
+    coreRef1.value.classList.add("active");
     document.addEventListener("mousemove", handleDrag1);
     document.addEventListener("mouseup", stopDrag1);
   };
 
   const startDrag2 = () => {
     isDragging2 = true;
-    coreRef2.value.classList.add('active');
+    coreRef2.value.classList.add("active");
     document.addEventListener("mousemove", handleDrag2);
     document.addEventListener("mouseup", stopDrag2);
   };
@@ -55,13 +55,13 @@ onMounted(() => {
         const newValue = (offsetX / sliderRect.width) * 100;
 
         // 限制值范围在 0 到 100 之间
-        const value = Math.max(Math.min(newValue, 100), 0);
+        const value = +Math.max(Math.min(newValue, 100), 0).toFixed(2);
         const another = +coreRef2.value.dataset.rate;
-        if (value < another) {
+        if (value <= another) {
           setRangeValue(value, another);
         } else {
           stopDrag1();
-          startDrag2()
+          startDrag2();
         }
       }
     }
@@ -75,11 +75,11 @@ onMounted(() => {
         const newValue = (offsetX / sliderRect.width) * 100;
 
         // 限制值范围在 0 到 100 之间
-        const value = Math.max(Math.min(newValue, 100), 0);
+        const value = +Math.max(Math.min(newValue, 100), 0).toFixed(4);
         const another = +coreRef1.value.dataset.rate;
         if (value < another) {
           stopDrag2(event);
-          startDrag1(event)
+          startDrag1(event);
         } else {
           setRangeValue(another, value);
         }
@@ -89,14 +89,14 @@ onMounted(() => {
 
   const stopDrag1 = () => {
     isDragging1 = false;
-    coreRef1.value.classList.remove('active');
+    coreRef1.value.classList.remove("active");
     document.removeEventListener("mousemove", handleDrag1);
     document.removeEventListener("mouseup", stopDrag1);
   };
 
   const stopDrag2 = () => {
     isDragging2 = false;
-    coreRef2.value.classList.remove('active');
+    coreRef2.value.classList.remove("active");
     document.removeEventListener("mousemove", handleDrag2);
     document.removeEventListener("mouseup", stopDrag2);
   };
@@ -117,28 +117,26 @@ const rightCore = computed(() => {
 
 const setRangeValue = (left, right) => {
   localRange.value[0] = left;
-  leftCore.value.dataset.rate = left;
-  leftCore.value.style.left = `${left}%`;
+  coreRef1.value.dataset.rate = left;
+  coreRef1.value.style.left = `${left}%`;
 
   localRange.value[1] = right;
-  rightCore.value.dataset.rate = right;
-  rightCore.value.style.left = `${right}%`;
+  coreRef2.value.dataset.rate = right;
+  coreRef2.value.style.left = `${right}%`;
 
   setRangeStyle();
   dataEmits("update:range", localRange.value);
 };
 const setRangeStyle = () => {
   centerRef.value.style.left = `${localRange.value[0]}%`;
-  centerRef.value.style.width = `${Math.abs(
-    localRange.value[1] - localRange.value[0]
-  )}%`;
+  centerRef.value.style.width = `${localRange.value[1] - localRange.value[0]}%`;
 };
 
 const handleClick = (evt) => {
   const sliderRect = containerRef.value.getBoundingClientRect();
   const offsetX = evt.clientX - sliderRect.left;
   const newValue = (offsetX / sliderRect.width) * 100;
-  const value = Math.max(Math.min(newValue, 100), 0);
+  const value = +Math.max(Math.min(newValue, 100), 0).toFixed(4);
 
   const d1 = +coreRef1.value.dataset.rate;
   const d2 = +coreRef2.value.dataset.rate;
