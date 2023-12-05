@@ -30,14 +30,16 @@ onMounted(() => {
   let isDragging1 = false;
   let isDragging2 = false;
 
-  const startDrag1 = (event) => {
+  const startDrag1 = () => {
     isDragging1 = true;
+    coreRef1.value.classList.add('active');
     document.addEventListener("mousemove", handleDrag1);
     document.addEventListener("mouseup", stopDrag1);
   };
 
-  const startDrag2 = (event) => {
+  const startDrag2 = () => {
     isDragging2 = true;
+    coreRef2.value.classList.add('active');
     document.addEventListener("mousemove", handleDrag2);
     document.addEventListener("mouseup", stopDrag2);
   };
@@ -58,8 +60,8 @@ onMounted(() => {
         if (value < another) {
           setRangeValue(value, another);
         } else {
-          stopDrag1(event);
-          startDrag2(event)
+          stopDrag1();
+          startDrag2()
         }
       }
     }
@@ -87,12 +89,14 @@ onMounted(() => {
 
   const stopDrag1 = () => {
     isDragging1 = false;
+    coreRef1.value.classList.remove('active');
     document.removeEventListener("mousemove", handleDrag1);
     document.removeEventListener("mouseup", stopDrag1);
   };
 
   const stopDrag2 = () => {
     isDragging2 = false;
+    coreRef2.value.classList.remove('active');
     document.removeEventListener("mousemove", handleDrag2);
     document.removeEventListener("mouseup", stopDrag2);
   };
@@ -180,7 +184,7 @@ const handleClick = (evt) => {
     transform: translate(-4px, -4px);
     cursor: pointer;
 
-    &:active {
+    &.active {
       border: 3px solid #27acee;
       width: 12px;
       height: 12px;
