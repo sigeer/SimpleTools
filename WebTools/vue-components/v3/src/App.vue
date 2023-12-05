@@ -16,6 +16,7 @@ import InputSamples from "./samples/EInputSample.vue";
 import ETableSample from "./samples/ETableSample.vue";
 import ENotificationSample from "./samples/ENotificationSample.vue";
 import EDatePickerSample from "./samples/EDatePickerSample.vue";
+import ESliderSample from "./samples/ESliderSample.vue";
 
 import Draggable from "./directives/Draggable/Draggable";
 import Loading from "./directives/Loading/Loading";
@@ -374,6 +375,10 @@ const showImgMultiply = () => {
         DatePicker
         <EDatePickerSample></EDatePickerSample>
       </div>
+
+      <hr />
+      Slider: 
+      <ESliderSample></ESliderSample>
     </div>
   </div>
 </template>
