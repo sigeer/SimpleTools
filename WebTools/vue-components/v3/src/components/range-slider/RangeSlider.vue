@@ -182,6 +182,9 @@ const handleClick = (evt) => {
 
     &:active {
       border: 3px solid #27acee;
+      width: 12px;
+      height: 12px;
+      transform: translate(-6px, -6px);
     }
   }
 }
