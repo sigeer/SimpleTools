@@ -42,7 +42,7 @@ onMounted(() => {
         const newValue = (offsetX / sliderRect.width) * 100;
 
         // 限制值范围在 0 到 100 之间
-        const value = Math.max(Math.min(newValue, 100), 0);
+        const value = +Math.max(Math.min(newValue, 100), 0).toFixed(4);
         setValue(value);
       }
     }
@@ -65,7 +65,7 @@ const handleClick = (evt) => {
   const sliderRect = containerRef.value.getBoundingClientRect();
   const offsetX = evt.clientX - sliderRect.left;
   const newValue = (offsetX / sliderRect.width) * 100;
-  const value = Math.max(Math.min(newValue, 100), 0);
+  const value = +Math.max(Math.min(newValue, 100), 0).toFixed(4);
   setValue(value);
 };
 </script>
