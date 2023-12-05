@@ -141,7 +141,7 @@ const remove = () => {
       &:hover,
       &:active {
         &:not(.disabled, [disabled]) {
-          background-color: #e1e1e1;
+          color: #000;
         }
       }
     }

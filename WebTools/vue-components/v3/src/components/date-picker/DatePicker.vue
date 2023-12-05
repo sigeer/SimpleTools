@@ -5,6 +5,7 @@
       class="date-input"
       :value="selectedDate"
       @focus="showSelector"
+      :disabled="disabled"
       readonly
     />
     <div class="picker-container" v-show="showPicker" :style="panelStyle">
@@ -25,6 +26,7 @@
               today: isToday(day),
               selected: isSelected(day),
               inMonth: isInMonth(day),
+              disabled: disableDateFunc(day)
             }"
             @click="selectDate(day)"
           >
@@ -44,6 +46,17 @@ const props = defineProps({
   modelValue: {
     type: [Date, dayjs],
   },
+  disableDateFunc: {
+    type: Function
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  displayFormat: {
+    type: String,
+    default: 'YYYY-MM-DD'
+  }
 });
 
 const emits = defineEmits(["update:modelValue"]);
@@ -54,8 +67,8 @@ const showPicker = ref(false);
 watch(
   () => props.modelValue,
   () => {
-    if (selectedDate.value !== dayjs(props.modelValue).format("YYYY-MM-DD")) {
-      selectedDate.value = dayjs(props.modelValue).format("YYYY-MM-DD");
+    if (selectedDate.value !== dayjs(props.modelValue).format(props.displayFormat)) {
+      selectedDate.value = dayjs(props.modelValue).format(props.displayFormat);
     }
   }
 );
@@ -134,7 +147,9 @@ const showSelector = () => {
 
 // 选中日期并隐藏日期选择器
 const selectDate = (date) => {
-  selectedDate.value = dayjs(date).format("YYYY-MM-DD");
+  if (props.disableDateFunc(date))
+    return
+  selectedDate.value = dayjs(date).format(props.displayFormat);
   emits("update:modelValue", date);
   showPicker.value = false;
 };
@@ -158,7 +173,7 @@ const isSelected = (date) => {
   if (!selectedDate.value) {
     return false;
   }
-  return dayjs(date).format("YYYY-MM-DD") === selectedDate.value;
+  return dayjs(date).format(props.displayFormat) === selectedDate.value;
 };
 
 // 上一个月
@@ -191,6 +206,7 @@ const daysOfWeek = ["一", "二", "三", "四", "五", "六", "日"];
 .date-picker {
   position: relative;
   display: inline-block;
+  user-select: none;
 }
 
 .date-input {
@@ -198,9 +214,14 @@ const daysOfWeek = ["一", "二", "三", "四", "五", "六", "日"];
   border-radius: 3px;
   padding: 5px;
   font-size: 16px;
-  width: 200px;
+  width: 240px;
   cursor: pointer;
   outline: none;
+
+  &.disabled, &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 }
 
 .picker-container {
@@ -254,17 +275,22 @@ const daysOfWeek = ["一", "二", "三", "四", "五", "六", "日"];
     align-items: center;
     cursor: pointer;
 
-    &:hover {
+    &:not(.disabled):hover {
       background-color: #e4e4e4;
     }
 
     &.selected,
-    &:active {
+    &:not(.disabled):active {
       background-color: #ccc;
     }
 
     &:not(.inMonth) {
       opacity: 0.6;
+    }
+
+    &.disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   }
 }
@@ -277,6 +303,10 @@ const daysOfWeek = ["一", "二", "三", "四", "五", "六", "日"];
   cursor: pointer;
   padding: 4px 8px;
   &:hover {
+    background-color: #e4e4e4;
+  }
+
+  &:active {
     background-color: #ccc;
   }
 }
