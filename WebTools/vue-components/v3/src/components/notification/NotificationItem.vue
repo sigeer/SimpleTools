@@ -1,5 +1,5 @@
 <template>
-  <div class="e-notification-item">
+  <div class="e-notification-item" :style="{ ...containerStyle, ...value.style}">
     <div class="e-notification-item-header">
       <div v-if="value.icon" class="icon">
         <span v-if="value.icon === 'warning'" class="warning">
@@ -87,6 +87,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+
+  containerStyle: {
+    type: Object
+  }
 });
 
 const emits = defineEmits(["delete"]);

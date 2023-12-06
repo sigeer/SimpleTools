@@ -5,6 +5,7 @@
         v-for="x in dataSource"
         :value="x"
         @delete="handleDelete(x)"
+        :container-style="containerStyle"
       ></NotificationItem>
     </div>
   </div>
@@ -23,8 +24,7 @@ const push = (item) => {
   }
   setTimeout(() => {
     const index = dataSource.value.findIndex((x) => x.key === currentKey);
-    if (index !== -1)
-        dataSource.value.splice(index, 1);
+    if (index !== -1) dataSource.value.splice(index, 1);
   }, item.time ?? 5000);
 };
 
@@ -40,7 +40,12 @@ function generateGuid() {
   });
 }
 
-defineExpose({ push });
+const containerStyle = ref({});
+const setGlobalStyle = (style) => {
+  if (style && Object.keys(style).length) containerStyle.value = style;
+};
+
+defineExpose({ push, setGlobalStyle });
 </script>
 
 <style lang="less" scoped>
