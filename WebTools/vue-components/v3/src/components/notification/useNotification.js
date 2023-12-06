@@ -19,5 +19,10 @@ export default function useNotification() {
     componentRef.value.push(item);
   };
 
-  return { show };
+  const setGlobalStyle = (style) => {
+    addComponent();
+    componentRef.value.setGlobalStyle(style);
+  }
+
+  return { show, setGlobalStyle };
 }
