@@ -18,6 +18,7 @@ import ENotificationSample from "./samples/ENotificationSample.vue";
 import EDatePickerSample from "./samples/EDatePickerSample.vue";
 import ESliderSample from "./samples/ESliderSample.vue";
 import BadgeSample from "./samples/BadgeSample.vue";
+import ETooltipSample from "./samples/ETooltipSample.vue";
 
 import Draggable from "./directives/Draggable/Draggable";
 import Loading from "./directives/Loading/Loading";
@@ -353,7 +354,7 @@ const showImgMultiply = () => {
       </div>
 
       <hr />
-      <div style="height: 500px">
+      <div>
         ImageFullScreen: <button @click="showImgSingle">showImgSingle</button>
         <button @click="showImgMultiply">showImgMultiply</button>
         <image-full-screen ref="imgRef"></image-full-screen>
@@ -378,12 +379,20 @@ const showImgMultiply = () => {
       </div>
 
       <hr />
-      Slider: 
+      Slider:
       <ESliderSample></ESliderSample>
 
       <hr />
       BadgeSample:
       <BadgeSample></BadgeSample>
+
+      <hr />
+      <div>
+        TooltipSample
+        <ETooltipSample></ETooltipSample>
+      </div>
+
+      <div style="height: 100px"></div>
     </div>
   </div>
 </template>
