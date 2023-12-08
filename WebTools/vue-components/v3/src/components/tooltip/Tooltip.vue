@@ -44,14 +44,34 @@ const setLocation = () => {
     placementStyle.value.top = "calc(100% + 7px)";
     placementStyle.value.bottom = null;
   }
-  if (rect.left < 225) {
-    placementStyle.value.left = `${225-rect.left + (225-rect.left) / 2}px`;
+};
+const setLocationHorizontal = () => {
+  if (!contentRef.value) return;
+  const rect = dRef.value.getBoundingClientRect();
+  const contentRect = contentRef.value.getBoundingClientRect();
+
+  console.log(rect);
+  console.log(contentRect);
+  const centerX = rect.left + (rect.width / 2);
+  if (contentRect.width / 2 >= centerX) {
+    placementStyle.value.left = `${centerX - contentRect.width / 2}px`;
+    placementStyle.value.transform = null;
+  } else {
+    placementStyle.value.left = null;
+    placementStyle.value.transform = 'translateX(-50%)';
   }
+  console.log(placementStyle.value);
+//   if (contentRect.width / 2 >= rect.right) {
+//     placementStyle.value.right = `${225 - rect.left + (225 - rect.left) / 2}px`;
+//   } else {
+//     placementStyle.value.right = null;
+//   }
 };
 watch(
   () => props.content,
   () => {
     setLocation();
+    setLocationHorizontal();
   }
 );
 onMounted(() => {
@@ -59,6 +79,7 @@ onMounted(() => {
     dRef.value.addEventListener("mouseenter", (evt) => {
       setLocation();
       dRef.value.classList.add("visible");
+      setLocationHorizontal();
     });
 
     dRef.value.addEventListener("mouseleave", (evt) => {
@@ -68,6 +89,7 @@ onMounted(() => {
     dRef.value.addEventListener("click", (evt) => {
       setLocation();
       dRef.value.classList.add("visible");
+      setLocationHorizontal();
     });
 
     document.addEventListener("click", (evt) => {
@@ -82,14 +104,14 @@ onMounted(() => {
 <style lang="less" scoped>
 .tooltip-container {
   position: relative;
+  display: inline-block;
 
-  &.visible  {
+  &.visible {
     .tooltip-content,
     &:has(.tooltip-content.bottom)&::before,
     &:has(.tooltip-content.top)&::before {
-        display: block;
+      display: block;
     }
-
   }
 
   &:has(.tooltip-content.bottom)&::before {
@@ -103,6 +125,7 @@ onMounted(() => {
     bottom: -5px;
     position: absolute;
     left: calc(50% - 5px);
+    z-index: 998;
   }
 
   &:has(.tooltip-content.top)&::before {
@@ -116,6 +139,7 @@ onMounted(() => {
     top: -5px;
     position: absolute;
     left: calc(50% - 5px);
+    z-index: 998;
   }
 
   .tooltip-content {
@@ -129,7 +153,8 @@ onMounted(() => {
     padding: 2px 4px;
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 0 0 2px #000;
-    transform: translateX(-50%);
+    // transform: translateX(-50%);
+    z-index: 998;
   }
 }
 </style>
