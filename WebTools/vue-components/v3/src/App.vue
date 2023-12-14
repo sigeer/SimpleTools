@@ -19,6 +19,7 @@ import EDatePickerSample from "./samples/EDatePickerSample.vue";
 import ESliderSample from "./samples/ESliderSample.vue";
 import BadgeSample from "./samples/BadgeSample.vue";
 import ETooltipSample from "./samples/ETooltipSample.vue";
+import FastEditSampe from "./samples/FastEditSampe.vue";
 
 import Draggable from "./directives/Draggable/Draggable";
 import Loading from "./directives/Loading/Loading";
@@ -393,6 +394,12 @@ const showImgMultiply = () => {
       </div>
 
       <div style="height: 100px"></div>
+
+      <hr />
+      <div>
+        FastEditSampe
+        <FastEditSampe></FastEditSampe>
+      </div>
     </div>
   </div>
 </template>
