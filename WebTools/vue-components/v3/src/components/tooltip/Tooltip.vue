@@ -30,7 +30,7 @@ export default {
       } else {
         styleStr = `top: ${window.scrollY + rect.top + rect.height + 8}px;`;
       }
-      setShow && containerEl.classList.add("visible");
+
       const contentRect = containerEl.getBoundingClientRect();
       if (contentRect.width / 2 >= centerX) {
         styleStr += `left: 16px;`;
@@ -39,22 +39,23 @@ export default {
       } else {
         styleStr += `left: ${centerX}px; transform: translateX(-50%)`;
       }
+      setShow && containerEl.classList.add("visible");
       containerEl.setAttribute("style", styleStr);
     };
     watch(
       () => props.content,
       () => {
         appendTooltipHtml(props.content);
-        setLocation();
       }
     );
     let container = document.createElement("div");
 
     const appendTooltipHtml = (content) => {
-      if (!content) return;
-
       if (document.body.contains(container))
         document.body.removeChild(container);
+
+      if (!content) return;
+
       const vNode = h(
         "span",
         {
@@ -65,6 +66,8 @@ export default {
       );
       render(vNode, container);
       document.body.append(container);
+
+      setLocation();
     };
     const getTooltipContainerEle = () =>
       container.querySelector(`.tooltip-content`);
@@ -147,14 +150,15 @@ export default {
   max-width: 450px;
   word-wrap: break-word;
   left: 50%;
-  display: none;
+  opacity: 0;
   padding: 2px 4px;
   border-radius: 6px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 0 0 2px #000;
   z-index: 998;
+  transition: ease-out 0.3s;
 
   &.visible {
-    display: block;
+    opacity: 1;
   }
 }
 </style>

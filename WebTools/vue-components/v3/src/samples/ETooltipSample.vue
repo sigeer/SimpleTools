@@ -10,6 +10,7 @@
   <Tooltip :content="tooltipContent">
     <input v-model="tooltipContent" />
   </Tooltip>
+  <input v-model="tooltipContent" />
 
   <Tooltip :content="tooltipContent" trigger="click">
     <div style="width: 100%; height: 24px; background-color: #66ccff">123</div>
