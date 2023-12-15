@@ -1,135 +1,160 @@
-<template>
-  <span class="tooltip-container" ref="dRef">
-    <slot></slot>
-    <span
-      :class="'tooltip-content ' + placement_vertical"
-      :style="placementStyle"
-      v-if="content"
-      ref="contentRef"
-    >
-      {{ content }}
-    </span>
-  </span>
-</template>
+<script>
+import { h, onMounted, ref, render, watch } from "vue";
 
-<script setup>
-import { onMounted, ref, watch } from "vue";
+export default {
+  props: {
+    content: {
+      type: [String, Number],
+    },
 
-const props = defineProps({
-  content: {
-    type: [String, Number],
-  },
-
-  trigger: {
-    type: String,
-    default: "hover",
-    validator: (value) => {
-      return ["hover", "click"].includes(value);
+    trigger: {
+      type: String,
+      default: "hover",
+      validator: (value) => {
+        return ["hover", "click"].includes(value);
+      },
     },
   },
-});
+  setup(props, { slots, ctx }) {
+    const dRef = ref();
+    const contentRef = ref();
+    const placement_vertical = ref("bottom");
+    const setLocation = (setShow) => {
+      const containerEl = getTooltipContainerEle();
+      const rect = dRef.value.getBoundingClientRect();
 
-const dRef = ref();
-const contentRef = ref();
-const placementStyle = ref({});
-const placement_vertical = ref("bottom");
-const setLocation = () => {
-  const rect = dRef.value.getBoundingClientRect();
-  if (window.innerHeight - rect.bottom < 20) {
-    placement_vertical.value = "top";
-    placementStyle.value.top = null;
-    placementStyle.value.bottom = "calc(100% + 7px)";
-  } else {
-    placement_vertical.value = "bottom";
-    placementStyle.value.top = "calc(100% + 7px)";
-    placementStyle.value.bottom = null;
-  }
-  if (rect.left < 225) {
-    placementStyle.value.left = `${225-rect.left + (225-rect.left) / 2}px`;
-  }
-};
-watch(
-  () => props.content,
-  () => {
-    setLocation();
-  }
-);
-onMounted(() => {
-  if (props.trigger === "hover") {
-    dRef.value.addEventListener("mouseenter", (evt) => {
-      setLocation();
-      dRef.value.classList.add("visible");
-    });
+      const centerX = rect.left + rect.width / 2;
+      let styleStr = "";
+      if (window.innerHeight - rect.bottom < 20) {
+        styleStr = `bottom: 100px;`;
+      } else {
+        styleStr = `top: ${window.scrollY + rect.top + rect.height + 8}px;`;
+      }
+      setShow && containerEl.classList.add("visible");
+      const contentRect = containerEl.getBoundingClientRect();
+      if (contentRect.width / 2 >= centerX) {
+        styleStr += `left: 16px;`;
+        const afterStyle = containerEl.querySelector(".tooltip-content-arrow");
+        afterStyle.setAttribute("style", `left: ${centerX - 20}px`);
+      } else {
+        styleStr += `left: ${centerX}px; transform: translateX(-50%)`;
+      }
+      containerEl.setAttribute("style", styleStr);
+    };
+    watch(
+      () => props.content,
+      () => {
+        appendTooltipHtml(props.content);
+        setLocation();
+      }
+    );
+    let container = document.createElement("div");
 
-    dRef.value.addEventListener("mouseleave", (evt) => {
-      dRef.value.classList.remove("visible");
-    });
-  } else if (props.trigger === "click") {
-    dRef.value.addEventListener("click", (evt) => {
-      setLocation();
-      dRef.value.classList.add("visible");
-    });
+    const appendTooltipHtml = (content) => {
+      if (!content) return;
 
-    document.addEventListener("click", (evt) => {
-      if (!dRef.value.contains(evt.target)) {
-        dRef.value.classList.remove("visible");
+      if (document.body.contains(container))
+        document.body.removeChild(container);
+      const vNode = h(
+        "span",
+        {
+          class: "tooltip-content " + placement_vertical.value,
+          ref: contentRef,
+        },
+        [h("span", { class: "tooltip-content-arrow" }), content]
+      );
+      render(vNode, container);
+      document.body.append(container);
+    };
+    const getTooltipContainerEle = () =>
+      container.querySelector(`.tooltip-content`);
+    let timeoutId;
+    onMounted(() => {
+      appendTooltipHtml(props.content);
+
+      const el = getTooltipContainerEle();
+      if (props.trigger === "hover") {
+        dRef.value.addEventListener("mouseenter", (evt) => {
+          clearTimeout(timeoutId);
+          setLocation(true);
+        });
+
+        dRef.value.addEventListener("mouseleave", (evt) => {
+          timeoutId = setTimeout(() => {
+            getTooltipContainerEle().classList.remove("visible");
+          }, 200);
+        });
+
+        el.addEventListener("mouseenter", (evt) => {
+          clearTimeout(timeoutId);
+        });
+
+        el.addEventListener("mouseleave", (evt) => {
+          timeoutId = setTimeout(() => {
+            getTooltipContainerEle().classList.remove("visible");
+          }, 200);
+        });
+      } else if (props.trigger === "click") {
+        dRef.value.addEventListener("click", (evt) => {
+          setLocation(true);
+        });
+
+        document.addEventListener("click", (evt) => {
+          if (
+            !dRef.value.contains(evt.target) &&
+            !getTooltipContainerEle().contains(evt.target)
+          ) {
+            getTooltipContainerEle().classList.remove("visible");
+          }
+        });
       }
     });
-  }
-});
+    const [defaultSlot] = slots.default();
+    return () => h(defaultSlot, { ref: dRef });
+  },
+};
 </script>
 
-<style lang="less" scoped>
-.tooltip-container {
-  position: relative;
+<style lang="less">
+.tooltip-content.bottom > .tooltip-content-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 7px solid black;
+  bottom: 100%;
+  position: absolute;
+  left: calc(50% - 5px);
+  z-index: 998;
+}
 
-  &.visible  {
-    .tooltip-content,
-    &:has(.tooltip-content.bottom)&::before,
-    &:has(.tooltip-content.top)&::before {
-        display: block;
-    }
+.tooltip-content.top > .tooltip-content-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid black;
+  top: -5px;
+  position: absolute;
+  left: calc(50% - 5px);
+  z-index: 998;
+}
 
-  }
+.tooltip-content {
+  background-color: #000;
+  color: #fff;
+  position: absolute;
+  max-width: 450px;
+  word-wrap: break-word;
+  left: 50%;
+  display: none;
+  padding: 2px 4px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 0 0 2px #000;
+  z-index: 998;
 
-  &:has(.tooltip-content.bottom)&::before {
-    display: none;
-    content: "";
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 7px solid black;
-    bottom: -5px;
-    position: absolute;
-    left: calc(50% - 5px);
-  }
-
-  &:has(.tooltip-content.top)&::before {
-    display: none;
-    content: "";
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 7px solid black;
-    top: -5px;
-    position: absolute;
-    left: calc(50% - 5px);
-  }
-
-  .tooltip-content {
-    background-color: #000;
-    color: #fff;
-    position: absolute;
-    max-width: 450px;
-    word-wrap: break-word;
-    left: 50%;
-    display: none;
-    padding: 2px 4px;
-    border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 0 0 2px #000;
-    transform: translateX(-50%);
+  &.visible {
+    display: block;
   }
 }
 </style>
