@@ -57,7 +57,6 @@ export default {
       if (!content) return;
 
       const rect = dRef.value.getBoundingClientRect();
-      console.log(rect)
       if (window.innerHeight - rect.bottom < 20) {
         placement_vertical.value = "top"
       }
