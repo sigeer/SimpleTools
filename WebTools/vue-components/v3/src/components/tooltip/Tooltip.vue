@@ -1,5 +1,5 @@
 <script>
-import { h, onMounted, ref, render, watch } from "vue";
+import { h, nextTick, onMounted, ref, render, watch } from "vue";
 
 export default {
   props: {
@@ -57,8 +57,9 @@ export default {
       if (!content) return;
 
       const rect = dRef.value.getBoundingClientRect();
+      console.log(rect);
       if (window.innerHeight - rect.bottom < 20) {
-        placement_vertical.value = "top"
+        placement_vertical.value = "top";
       }
 
       const vNode = h(
@@ -77,9 +78,7 @@ export default {
     const getTooltipContainerEle = () =>
       container.querySelector(`.tooltip-content`);
     let timeoutId;
-    onMounted(() => {
-      appendTooltipHtml(props.content);
-
+    const triggerEvent = () => {
       const el = getTooltipContainerEle();
       if (props.trigger === "hover") {
         dRef.value.addEventListener("mouseenter", (evt) => {
@@ -121,6 +120,12 @@ export default {
           }
         });
       }
+    };
+    onMounted(() => {
+      nextTick(() => {
+        appendTooltipHtml(props.content);
+        triggerEvent();
+      });
     });
     const [defaultSlot] = slots.default();
     return () => h(defaultSlot, { ref: dRef });
