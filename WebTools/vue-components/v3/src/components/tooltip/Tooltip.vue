@@ -26,7 +26,7 @@ export default {
       const centerX = rect.left + rect.width / 2;
       let styleStr = "";
       if (window.innerHeight - rect.bottom < 20) {
-        styleStr = `bottom: 100px;`;
+        styleStr = `top: ${window.scrollY + rect.top - rect.height - 12}px;`;
       } else {
         styleStr = `top: ${window.scrollY + rect.top + rect.height + 8}px;`;
       }
@@ -55,6 +55,11 @@ export default {
         document.body.removeChild(container);
 
       if (!content) return;
+
+      const rect = dRef.value.getBoundingClientRect();
+      if (window.innerHeight - rect.bottom < 20) {
+        placement_vertical.value = "top"
+      }
 
       const vNode = h(
         "span",
@@ -142,7 +147,7 @@ export default {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 7px solid black;
-  top: -5px;
+  bottom: -8px;
   position: absolute;
   left: calc(50% - 5px);
   z-index: 998;
