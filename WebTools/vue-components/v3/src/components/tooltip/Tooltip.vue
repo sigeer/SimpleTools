@@ -39,8 +39,8 @@ export default {
       } else {
         styleStr += `left: ${centerX}px; transform: translateX(-50%)`;
       }
-      setShow && containerEl.classList.add("visible");
       containerEl.setAttribute("style", styleStr);
+      setShow && containerEl.classList.add("visible");
     };
     watch(
       () => props.content,
