@@ -1,5 +1,5 @@
 <script>
-import { h, nextTick, onMounted, ref, render, watch } from "vue";
+import { h, onMounted, ref, render, watch } from "vue";
 
 export default {
   props: {
@@ -17,21 +17,28 @@ export default {
   },
   setup(props, { slots, ctx }) {
     const dRef = ref();
-    const contentRef = ref();
-    const placement_vertical = ref("bottom");
+
     const setLocation = (setShow) => {
       const containerEl = getTooltipContainerEle();
       const rect = dRef.value.getBoundingClientRect();
+      const contentRect = containerEl.getBoundingClientRect();
 
       const centerX = rect.left + rect.width / 2;
       let styleStr = "";
-      if (window.innerHeight - rect.bottom < 20) {
-        styleStr = `top: ${window.scrollY + rect.top - rect.height - 12}px;`;
+      if (
+        document.documentElement.scrollHeight - dRef.value.offsetTop - rect.height <
+          contentRect.height + 16
+      ) {
+        containerEl.classList.remove("bottom");
+        containerEl.classList.add("top");
+        styleStr = `top: ${dRef.value.offsetTop - rect.height - contentRect.height + 8}px;`;
       } else {
+        containerEl.classList.remove("top");
+        containerEl.classList.add("bottom");
         styleStr = `top: ${window.scrollY + rect.top + rect.height + 8}px;`;
       }
 
-      const contentRect = containerEl.getBoundingClientRect();
+
       if (contentRect.width / 2 >= centerX) {
         styleStr += `left: 16px;`;
         const afterStyle = containerEl.querySelector(".tooltip-content-arrow");
@@ -56,17 +63,10 @@ export default {
 
       if (!content) return;
 
-      const rect = dRef.value.getBoundingClientRect();
-      console.log(rect);
-      if (window.innerHeight - rect.bottom < 20) {
-        placement_vertical.value = "top";
-      }
-
       const vNode = h(
         "span",
         {
-          class: "tooltip-content " + placement_vertical.value,
-          ref: contentRef,
+          class: "tooltip-content",
         },
         [h("span", { class: "tooltip-content-arrow" }), content]
       );
@@ -122,10 +122,8 @@ export default {
       }
     };
     onMounted(() => {
-      nextTick(() => {
-        appendTooltipHtml(props.content);
-        triggerEvent();
-      });
+      appendTooltipHtml(props.content);
+      triggerEvent();
     });
     const [defaultSlot] = slots.default();
     return () => h(defaultSlot, { ref: dRef });
@@ -165,6 +163,7 @@ export default {
   max-width: 450px;
   word-wrap: break-word;
   left: 50%;
+  top: 0;
   opacity: 0;
   padding: 2px 4px;
   border-radius: 6px;
