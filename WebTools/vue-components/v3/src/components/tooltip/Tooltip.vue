@@ -94,7 +94,9 @@ export default {
 
         el.addEventListener("mouseleave", (evt) => {
           timeoutId = setTimeout(() => {
-            getTooltipContainerEle().classList.remove("visible");
+            const tooltipContentEle = getTooltipContainerEle();
+            if (tooltipContentEle)
+              tooltipContentEle.classList.remove("visible");
           }, 200);
         });
       } else if (props.trigger === "click") {
@@ -103,11 +105,14 @@ export default {
         });
 
         document.addEventListener("click", (evt) => {
-          if (
-            !dRef.value.contains(evt.target) &&
-            !getTooltipContainerEle().contains(evt.target)
-          ) {
-            getTooltipContainerEle().classList.remove("visible");
+          const tooltipContentEle = getTooltipContainerEle();
+          if (tooltipContentEle) {
+            if (
+              !dRef.value.contains(evt.target) &&
+              !tooltipContentEle.contains(evt.target)
+            ) {
+              tooltipContentEle.classList.remove("visible");
+            }
           }
         });
       }
