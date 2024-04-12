@@ -7,20 +7,21 @@ Param(
 )
 
 if ([string]::IsNullOrEmpty($NugetServerPath)) {
-    Write-Error "===>[NugetServerPath] is NullOrEmpty."
+    Write-Error New-Object System.Exception "NugetServer 不能为空"
     return
 }
 
-$NowLocation = $MyInvocation.MyCommand.Definition
-Write-Host "NowLocation: $NowLocation" -ForegroundColor Green
-
 if ([string]::IsNullOrEmpty($ProjectDir)){
-    $ProjectDir = (Get-Location).Path
+    Write-Error New-Object System.Exception "ProjectDir 不能为空"
+    return
 }
 
 if ([string]::IsNullOrEmpty($GitWorker)) {
-    $GitWorker = (Get-ChildItem -Path $NowLocation 'GitPull.sh').FullName
+    Write-Error New-Object System.Exception "GitWorker 不能为空"
+    return
 }
+
+$OriginPwd = $PWD
 
 Write-Host "==========" + $ProjectDir + "==========="
 Set-Location $ProjectDir
@@ -63,7 +64,7 @@ if ($PackResult.Length -gt 0) {
     }
     
     Remove-Item -Path $PackageFileObj
-    Set-Location = $NowLocation
+    Set-Location = $OriginPwd
 } else {
     Write-Error "===>Pack Failed!!"
 }
