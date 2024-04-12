@@ -6,17 +6,17 @@ Param(
 )
 
 if ([string]::IsNullOrEmpty($NugetServerPath)) {
-    Write-Error New-Object System.Exception "NugetServer 不能为空"
+    Write-Error "NugetServer 不能为空"
     return
 }
 
 if ([string]::IsNullOrEmpty($ProjectDir)){
-    Write-Error New-Object System.Exception "ProjectDir 不能为空"
+    Write-Error "ProjectDir 不能为空"
     return
 }
 
 if ([string]::IsNullOrEmpty($GitWorker)) {
-    Write-Error New-Object System.Exception "GitWorker 不能为空"
+    Write-Error "GitWorker 不能为空"
     return
 }
 
